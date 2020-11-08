@@ -11,6 +11,10 @@ class ProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
 
+  void pushProductDetailsPage(BuildContext context) {
+    Navigator.of(context).pushNamed('/product-details', arguments: id);
+  }
+
   @override
   Widget build(BuildContext context) {
     final circularBorder = BorderRadius.circular(10.0);
@@ -24,7 +28,10 @@ class ProductItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: circularBorder,
         child: GridTile(
-          child: Image.network(imageUrl, fit: BoxFit.cover),
+          child: InkWell(
+            onTap: () => pushProductDetailsPage(context),
+            child: Image.network(imageUrl, fit: BoxFit.cover),
+          ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
             leading: IconButton(

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'pages/product_details_page.dart';
 import 'pages/products_overview_page.dart';
-import 'providers/products.dart';
+import 'models/products.dart';
 
 void main() => runApp(MyApp());
 

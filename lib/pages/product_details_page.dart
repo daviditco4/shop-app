@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/products.dart';
+import '../models/products.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   @override

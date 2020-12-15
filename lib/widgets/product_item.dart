@@ -13,7 +13,7 @@ class ProductItem extends StatelessWidget {
     final circularBorder = BorderRadius.circular(10.0);
     final theme = Theme.of(context);
     final accentColor = theme.accentColor;
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
 
     return Card(
       margin: EdgeInsets.zero,
@@ -28,12 +28,16 @@ class ProductItem extends StatelessWidget {
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
-            leading: IconButton(
-              icon: Icon(
-                product.isWished ? Icons.favorite : Icons.favorite_border,
-              ),
-              onPressed: product.toggleWished,
-              color: accentColor,
+            leading: Consumer<Product>(
+              builder: (_, product, __) {
+                return IconButton(
+                  icon: Icon(
+                    product.isWished ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  onPressed: product.toggleWished,
+                  color: accentColor,
+                );
+              },
             ),
             title: Text(
               product.title,

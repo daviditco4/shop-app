@@ -42,6 +42,10 @@ class Products with ChangeNotifier {
     return [..._values];
   }
 
+  List<Product> get wishedValuesOnly {
+    return _values.where((value) => value.isWished).toList();
+  }
+
   Product findById(String id) {
     return _values.firstWhere((product) => product.id == id);
   }

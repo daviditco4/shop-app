@@ -38,9 +38,7 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  List<Product> get values {
-    return [..._values];
-  }
+  List<Product> get values => [..._values];
 
   List<Product> get wishedValuesOnly {
     return _values.where((value) => value.isWished).toList();

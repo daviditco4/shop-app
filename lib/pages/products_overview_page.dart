@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/cart.dart';
+import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
 
 enum Filtering { none, wishedOnly }
@@ -18,6 +21,15 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
       appBar: AppBar(
         title: const Text('Products'),
         actions: [
+          Consumer<Cart>(
+            builder: (_, cart, child) {
+              return Badge(value: '${cart.totalQuantity}', child: child);
+            },
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+          ),
           PopupMenuButton(
             onSelected: (filtering) => setState(() => _filtering = filtering),
             icon: Icon(Icons.more_vert),

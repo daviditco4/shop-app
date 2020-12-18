@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
+import '../widgets/cart_item.dart';
 
 class CartOverviewPage extends StatelessWidget {
   static const routeName = '/cart-overview';
@@ -45,6 +46,19 @@ class CartOverviewPage extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.itemsQuantity,
+              itemBuilder: (_, index) {
+                final productId = cart.items.keys.elementAt(index);
+                final cartItem = cart.items[productId];
+                return ChangeNotifierProvider.value(
+                  value: cartItem,
+                  child: CartItem(productId),
+                );
+              },
             ),
           ),
         ],

@@ -1,25 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import 'product.dart';
+import 'cart_item.dart';
 import 'products.dart';
-
-class CartItem {
-  CartItem({
-    @required this.id,
-    @required this.title,
-    @required this.quantity,
-    @required this.price,
-  });
-
-  final String id;
-  final String title;
-  final double price;
-  int quantity;
-
-  double get totalPrice => price * quantity;
-
-  void addOneMore() => quantity += 1;
-}
 
 class Cart with ChangeNotifier {
   final Map<String, CartItem> _items = {};
@@ -28,6 +10,8 @@ class Cart with ChangeNotifier {
   Cart(this.productsProvider);
 
   Map<String, CartItem> get items => {..._items};
+
+  int get itemsQuantity => _items.length;
 
   int get totalQuantity {
     return _items.values.fold(0, (prevVal, elem) => prevVal + elem.quantity);
@@ -41,7 +25,7 @@ class Cart with ChangeNotifier {
   }
 
   void addSingleProduct(String productId) {
-    Product product = productsProvider.findById(productId);
+    var product = productsProvider.findById(productId);
 
     _items.putIfAbsent(
       productId,

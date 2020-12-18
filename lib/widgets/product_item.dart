@@ -3,10 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
 import '../models/product.dart';
+import '../pages/product_details_page.dart';
 
 class ProductItem extends StatelessWidget {
   void pushProductDetailsPage(BuildContext context, String id) {
-    Navigator.of(context).pushNamed('/product-details', arguments: id);
+    Navigator.of(context).pushNamed(
+      ProductDetailsPage.routeName,
+      arguments: id,
+    );
   }
 
   @override

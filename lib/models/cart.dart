@@ -16,6 +16,8 @@ class CartItem {
   final double price;
   int quantity;
 
+  double get totalPrice => price * quantity;
+
   void addOneMore() => quantity += 1;
 }
 
@@ -29,6 +31,13 @@ class Cart with ChangeNotifier {
 
   int get totalQuantity {
     return _items.values.fold(0, (prevVal, elem) => prevVal + elem.quantity);
+  }
+
+  double get totalPrice {
+    return _items.values.fold(
+      0.0,
+      (prevVal, elem) => prevVal + elem.totalPrice,
+    );
   }
 
   void addSingleProduct(String productId) {

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'models/cart.dart';
 import 'models/products.dart';
+import 'pages/cart_overview_page.dart';
 import 'pages/product_details_page.dart';
 import 'pages/products_overview_page.dart';
 
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
           ),
           routes: {
             '/': (_) => ProductsOverviewPage(),
-            '/product-details': (_) => ProductDetailsPage(),
+            ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
+            CartOverviewPage.routeName: (_) => CartOverviewPage(),
           },
         ),
       ),

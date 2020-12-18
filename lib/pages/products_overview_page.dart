@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/cart.dart';
 import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
+import 'cart_overview_page.dart';
 
 enum Filtering { none, wishedOnly }
 
@@ -27,7 +28,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             },
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartOverviewPage.routeName);
+              },
             ),
           ),
           PopupMenuButton(

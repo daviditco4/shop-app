@@ -49,14 +49,13 @@ class ProductItem extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: Consumer<Cart>(
-              builder: (_, cart, __) {
-                return IconButton(
-                  icon: Icon(Icons.add_shopping_cart),
-                  onPressed: () => cart.addSingleProduct(product.id),
-                  color: accentColor,
-                );
+            trailing: IconButton(
+              icon: Icon(Icons.add_shopping_cart),
+              onPressed: () {
+                Provider.of<Cart>(context, listen: false)
+                    .addSingleProduct(product.id);
               },
+              color: accentColor,
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
 import '../widgets/badge.dart';
+import '../widgets/main_drawer.dart';
 import '../widgets/products_grid.dart';
 import 'cart_overview_page.dart';
 
@@ -19,6 +20,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MainDrawer(),
       appBar: AppBar(
         title: const Text('Products'),
         actions: [

@@ -10,7 +10,7 @@ class OrderItem extends StatelessWidget {
     final order = Provider.of<Order>(context, listen: false);
 
     return Card(
-      margin: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Column(
         children: [
           ExpansionTile(

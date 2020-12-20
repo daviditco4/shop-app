@@ -5,6 +5,7 @@ import 'models/cart.dart';
 import 'models/orders.dart';
 import 'models/products.dart';
 import 'pages/cart_overview_page.dart';
+import 'pages/orders_overview_page.dart';
 import 'pages/product_details_page.dart';
 import 'pages/products_overview_page.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
             '/': (_) => ProductsOverviewPage(),
             ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
             CartOverviewPage.routeName: (_) => CartOverviewPage(),
+            OrdersOverviewPage.routeName: (_) => OrdersOverviewPage(),
           },
         ),
       ),

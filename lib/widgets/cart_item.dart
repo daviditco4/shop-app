@@ -12,10 +12,11 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const imageSize = 40.0;
     final cartItem = Provider.of<ci.CartItem>(context, listen: false);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
       child: Dismissible(
         key: ValueKey(productId),
         onDismissed: (_) {
@@ -30,16 +31,14 @@ class CartItem extends StatelessWidget {
         ),
         child: Card(
           child: ListTile(
-            leading: Consumer<Products>(
-              builder: (_, products, __) {
-                const imageSize = 40.0;
-                return Image.network(
-                  products.findById(productId).imageUrl,
-                  width: imageSize,
-                  height: imageSize,
-                  fit: BoxFit.fill,
-                );
-              },
+            leading: Image.network(
+              Provider.of<Products>(
+                context,
+                listen: false,
+              ).findById(productId).imageUrl,
+              width: imageSize,
+              height: imageSize,
+              fit: BoxFit.fill,
             ),
             title: Text(cartItem.title),
             subtitle: Text('${cartItem.quantity} x \$${cartItem.price}'),

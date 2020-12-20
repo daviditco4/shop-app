@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
-import '../models/cart_item.dart' as ci;
-import '../models/products.dart';
+import '../../models/cart/cart.dart';
+import '../../models/cart/cart_item.dart' as ci;
+import '../../models/products/products.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem(this.productId);
@@ -30,6 +30,7 @@ class CartItem extends StatelessWidget {
           child: const Icon(Icons.delete, size: 30.0, color: Colors.white),
         ),
         child: Card(
+          margin: EdgeInsets.zero,
           child: ListTile(
             leading: Image.network(
               Provider.of<Products>(

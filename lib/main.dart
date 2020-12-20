@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/cart.dart';
-import 'models/orders.dart';
-import 'models/products.dart';
-import 'pages/cart_overview_page.dart';
-import 'pages/orders_overview_page.dart';
-import 'pages/product_details_page.dart';
-import 'pages/products_overview_page.dart';
+import 'models/cart/cart.dart';
+import 'models/orders/orders.dart';
+import 'models/products/products.dart';
+import 'pages/orders/orders_overview_page.dart';
+import 'pages/store/cart_overview_page.dart';
+import 'pages/store/product_details_page.dart';
+import 'pages/store/products_overview_page.dart';
 
 void main() => runApp(MyApp());
 

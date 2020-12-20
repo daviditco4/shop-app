@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
-import '../widgets/badge.dart';
-import '../widgets/main_drawer.dart';
-import '../widgets/products_grid.dart';
+import '../../models/cart/cart.dart';
+import '../../widgets/other/badge.dart';
+import '../../widgets/other/main_drawer.dart';
+import '../../widgets/other/products_grid.dart';
 import 'cart_overview_page.dart';
 
 enum Filtering { none, wishedOnly }

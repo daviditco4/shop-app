@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'cart_item.dart';
+import '../cart/cart_item.dart';
 
 class Order with ChangeNotifier {
   Order({

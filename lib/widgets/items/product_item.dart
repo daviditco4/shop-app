@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
-import '../models/product.dart';
-import '../pages/product_details_page.dart';
+import '../../models/cart/cart.dart';
+import '../../models/products/product.dart';
+import '../../pages/store/product_details_page.dart';
 
 class ProductItem extends StatelessWidget {
   void pushProductDetailsPage(BuildContext context, String id) {

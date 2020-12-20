@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
-import '../models/orders.dart';
-import '../widgets/cart_item.dart';
+import '../../models/cart/cart.dart';
+import '../../models/orders/orders.dart';
+import '../../widgets/items/cart_item.dart';
 
 class CartOverviewPage extends StatelessWidget {
   static const routeName = '/cart-overview';

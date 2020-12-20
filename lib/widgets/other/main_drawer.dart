@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../pages/orders_overview_page.dart';
-import 'drawer_item.dart';
+import '../../pages/orders/orders_overview_page.dart';
+import '../items/drawer_item.dart';
 
 class MainDrawer extends StatelessWidget {
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/products.dart';
-import '../pages/products_overview_page.dart';
-import 'product_item.dart';
+import '../../models/products/products.dart';
+import '../../pages/store/products_overview_page.dart';
+import '../items/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid(this.filtering);

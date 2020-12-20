@@ -10,7 +10,6 @@ class Cart with ChangeNotifier {
   Cart(this.productsProvider);
 
   Map<String, CartItem> get items => {..._items};
-
   int get itemsQuantity => _items.length;
 
   int get totalQuantity {

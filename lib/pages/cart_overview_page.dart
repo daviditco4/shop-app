@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart.dart';
+import '../models/orders.dart';
 import '../widgets/cart_item.dart';
 
 class CartOverviewPage extends StatelessWidget {
@@ -13,6 +14,8 @@ class CartOverviewPage extends StatelessWidget {
     const padding15 = EdgeInsets.all(15.0);
     const sizedBoxWidth = 8.0;
     final theme = Theme.of(context);
+    final cartItems = cart.items;
+    final cartItemsKeys = cartItems.keys;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Your Cart')),
@@ -38,7 +41,9 @@ class CartOverviewPage extends StatelessWidget {
                   ),
                   const SizedBox(width: sizedBoxWidth),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false).add(cart);
+                    },
                     padding: const EdgeInsets.all(sizedBoxWidth),
                     textColor: theme.primaryColor,
                     child: const Text(
@@ -54,8 +59,8 @@ class CartOverviewPage extends StatelessWidget {
             child: ListView.builder(
               itemCount: cart.itemsQuantity,
               itemBuilder: (_, index) {
-                final productId = cart.items.keys.elementAt(index);
-                final cartItem = cart.items[productId];
+                final productId = cartItemsKeys.elementAt(index);
+                final cartItem = cartItems[productId];
                 return ChangeNotifierProvider.value(
                   value: cartItem,
                   child: CartItem(productId),

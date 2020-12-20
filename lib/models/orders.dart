@@ -7,6 +7,7 @@ class Orders with ChangeNotifier {
   final List<Order> _list = [];
 
   List<Order> get list => [..._list];
+  int get quantity => _list.length;
 
   void add(Cart cart) {
     final dateTime = DateTime.now();
@@ -16,7 +17,7 @@ class Orders with ChangeNotifier {
       Order(
         id: dateTime.toString(),
         totalCost: cart.totalPrice,
-        items: cart.items.values,
+        items: cart.items.values.toList(),
         dateTime: dateTime,
       ),
     );

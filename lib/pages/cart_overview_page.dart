@@ -11,7 +11,6 @@ class CartOverviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     const padding15 = EdgeInsets.all(15.0);
-    const largeTextStyle = TextStyle(fontSize: 20.0);
     const sizedBoxWidth = 8.0;
     final theme = Theme.of(context);
 
@@ -25,13 +24,16 @@ class CartOverviewPage extends StatelessWidget {
               padding: padding15,
               child: Row(
                 children: [
-                  const Text('Total', style: largeTextStyle),
+                  Text('Total', style: theme.textTheme.headline6),
                   const Spacer(),
                   Chip(
                     backgroundColor: theme.primaryColorDark,
                     label: Text(
                       '\$${cart.totalPrice}',
-                      style: largeTextStyle.copyWith(color: Colors.white),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
                     ),
                   ),
                   const SizedBox(width: sizedBoxWidth),

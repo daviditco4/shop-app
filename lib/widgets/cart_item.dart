@@ -14,20 +14,20 @@ class CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartItem = Provider.of<ci.CartItem>(context, listen: false);
 
-    return Dismissible(
-      key: ValueKey(productId),
-      onDismissed: (_) {
-        Provider.of<Cart>(context, listen: false).removeItem(productId);
-      },
-      direction: DismissDirection.startToEnd,
-      background: Container(
-        color: Theme.of(context).errorColor,
-        padding: const EdgeInsets.all(20.0),
-        alignment: Alignment.centerRight,
-        child: const Icon(Icons.delete, size: 30.0),
-      ),
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+      child: Dismissible(
+        key: ValueKey(productId),
+        onDismissed: (_) {
+          Provider.of<Cart>(context, listen: false).removeItem(productId);
+        },
+        direction: DismissDirection.startToEnd,
+        background: Container(
+          color: Theme.of(context).errorColor,
+          padding: const EdgeInsets.all(20.0),
+          alignment: Alignment.centerLeft,
+          child: const Icon(Icons.delete, size: 30.0, color: Colors.white),
+        ),
         child: ListTile(
           leading: Consumer<Products>(
             builder: (_, products, __) {

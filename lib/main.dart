@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models/cart.dart';
+import 'models/orders.dart';
 import 'models/products.dart';
 import 'pages/cart_overview_page.dart';
 import 'pages/product_details_page.dart';
@@ -12,8 +13,11 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProvider(create: (_) => Orders()),
+      ],
       child: Consumer<Products>(
         builder: (_, products, child) {
           return ChangeNotifierProvider(

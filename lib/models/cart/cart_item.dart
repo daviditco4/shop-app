@@ -18,4 +18,5 @@ class CartItem with ChangeNotifier {
   Price get totalPrice => price * quantity;
   String get details => '$quantity x \$$price';
   void addOneMore() => quantity++;
+  void removeOne() => quantity--;
 }

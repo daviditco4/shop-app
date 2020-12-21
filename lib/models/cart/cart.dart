@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../products/products.dart';
+import '../utils/price.dart';
 import 'cart_item.dart';
 
 class Cart with ChangeNotifier {
@@ -16,9 +17,9 @@ class Cart with ChangeNotifier {
     return _items.values.fold(0, (prevVal, elem) => prevVal + elem.quantity);
   }
 
-  double get totalPrice {
+  Price get totalPrice {
     return _items.values.fold(
-      0.0,
+      Price(0.0),
       (prevVal, elem) => prevVal + elem.totalPrice,
     );
   }

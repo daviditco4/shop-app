@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../utils/price.dart';
+
 class Product with ChangeNotifier {
   Product({
     @required this.id,
@@ -13,7 +15,7 @@ class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
-  final double price;
+  final Price price;
   final String imageUrl;
   bool isWished;
 

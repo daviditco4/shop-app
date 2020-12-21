@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../utils/price.dart';
+
 class CartItem with ChangeNotifier {
   CartItem({
     @required this.id,
@@ -10,10 +12,10 @@ class CartItem with ChangeNotifier {
 
   final String id;
   final String title;
-  final double price;
+  final Price price;
   int quantity;
 
-  double get totalPrice => price * quantity;
+  Price get totalPrice => price * quantity;
   String get details => '$quantity x \$$price';
   void addOneMore() => quantity++;
 }

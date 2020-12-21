@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../cart/cart_item.dart';
+import '../utils/price.dart';
 
 class Order with ChangeNotifier {
   Order({
@@ -11,7 +12,7 @@ class Order with ChangeNotifier {
   });
 
   final String id;
-  final double totalCost;
+  final Price totalCost;
   final List<CartItem> items;
   final DateTime dateTime;
 }

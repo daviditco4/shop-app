@@ -42,7 +42,7 @@ class CartItem extends StatelessWidget {
               fit: BoxFit.fill,
             ),
             title: Text(cartItem.title),
-            subtitle: Text('${cartItem.quantity} x \$${cartItem.price}'),
+            subtitle: Text(cartItem.details),
             trailing: Chip(
               backgroundColor: Theme.of(context).primaryColorDark,
               label: Text(

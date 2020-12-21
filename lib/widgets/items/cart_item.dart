@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/cart/cart.dart';
 import '../../models/cart/cart_item.dart' as ci;
 import '../../models/products/products.dart';
+import '../other/binary_dialog_action.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem(this.productId);
@@ -19,10 +20,22 @@ class CartItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
       child: Dismissible(
         key: ValueKey(productId),
+        direction: DismissDirection.startToEnd,
         onDismissed: (_) {
           Provider.of<Cart>(context, listen: false).removeItem(productId);
         },
-        direction: DismissDirection.startToEnd,
+        confirmDismiss: (_) {
+          return showDialog(
+            context: context,
+            builder: (_) {
+              return const AlertDialog(
+                title: Text('This item will be removed'),
+                content: Text('Are you sure?'),
+                actions: [BinaryDialogAction(true), BinaryDialogAction(false)],
+              );
+            },
+          );
+        },
         background: Container(
           color: Theme.of(context).errorColor,
           padding: const EdgeInsets.all(20.0),

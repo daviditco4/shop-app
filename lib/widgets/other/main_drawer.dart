@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../pages/orders/orders_overview_page.dart';
+import '../../pages/your_products/your_products_overview_page.dart';
 import '../items/drawer_item.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -24,6 +25,11 @@ class MainDrawer extends StatelessWidget {
             routeName: OrdersOverviewPage.routeName,
             icon: Icons.payment,
             name: 'Orders',
+          ),
+          const DrawerItem(
+            routeName: YourProductsOverviewPage.routeName,
+            icon: Icons.monetization_on_outlined,
+            name: 'Your Products',
           ),
         ],
       ),

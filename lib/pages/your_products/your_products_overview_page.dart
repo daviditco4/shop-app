@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/products/products.dart';
 import '../../widgets/items/your_product_item.dart';
 import '../../widgets/other/main_drawer.dart';
+import 'edit_product_page.dart';
 
 class YourProductsOverviewPage extends StatelessWidget {
   static const routeName = '/your-products-overview';
@@ -14,7 +15,14 @@ class YourProductsOverviewPage extends StatelessWidget {
       drawer: MainDrawer(),
       appBar: AppBar(
         title: const Text('Your Products'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditProductPage.routeName);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/products/product.dart';
+import '../../models/products/products.dart';
 import '../../models/utils/price.dart';
 
 class EditProductPage extends StatefulWidget {
@@ -41,11 +43,8 @@ class _EditProductPageState extends State<EditProductPage> {
         imageUrl: _formInput['imageUrl'],
       );
 
-      print(newProduct.id);
-      print(newProduct.title);
-      print(newProduct.description);
-      print(newProduct.price);
-      print(newProduct.imageUrl);
+      Provider.of<Products>(context, listen: false).add(newProduct);
+      Navigator.of(context).pop();
     }
   }
 

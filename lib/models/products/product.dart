@@ -23,4 +23,14 @@ class Product with ChangeNotifier {
     isWished = !isWished;
     notifyListeners();
   }
+
+  Product copyWithId(String newId) {
+    return Product(
+      id: newId,
+      title: title,
+      description: description,
+      price: price,
+      imageUrl: imageUrl,
+    );
+  }
 }

@@ -25,22 +25,28 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
 
+  String validateNonEmpty(String value, String label) {
+    return value.isEmpty ? 'The $label must not be empty.' : null;
+  }
+
   void _saveForm() {
-    _formKey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
 
-    final newProduct = Product(
-      id: _formInput['id'],
-      title: _formInput['title'],
-      description: _formInput['description'],
-      price: _formInput['price'],
-      imageUrl: _formInput['imageUrl'],
-    );
+      final newProduct = Product(
+        id: _formInput['id'],
+        title: _formInput['title'],
+        description: _formInput['description'],
+        price: _formInput['price'],
+        imageUrl: _formInput['imageUrl'],
+      );
 
-    print(newProduct.id);
-    print(newProduct.title);
-    print(newProduct.description);
-    print(newProduct.price);
-    print(newProduct.imageUrl);
+      print(newProduct.id);
+      print(newProduct.title);
+      print(newProduct.description);
+      print(newProduct.price);
+      print(newProduct.imageUrl);
+    }
   }
 
   void _updateImage() {
@@ -73,76 +79,92 @@ class _EditProductPageState extends State<EditProductPage> {
         title: const Text('Edit Product'),
         actions: [FlatButton(onPressed: _saveForm, child: const Text('SAVE'))],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  onSaved: (newVal) => _formInput['title'] = newVal,
-                  onFieldSubmitted: (_) {
-                    focusScope.requestFocus(_priceFocusNode);
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                TextFormField(
-                  focusNode: _priceFocusNode,
-                  decoration: const InputDecoration(labelText: 'Price'),
-                  keyboardType: TextInputType.number,
-                  onSaved: (v) => _formInput['price'] = Price(double.parse(v)),
-                  onFieldSubmitted: (_) {
-                    focusScope.requestFocus(_descriptionFocusNode);
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                TextFormField(
-                  focusNode: _descriptionFocusNode,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  onSaved: (newVal) => _formInput['description'] = newVal,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 25.0, right: 15.0),
-                      width: imageSize,
-                      height: imageSize,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.black45,
-                      ),
-                      child: _imageUrlController.text.isEmpty
-                          ? const Icon(
-                              Icons.image_outlined,
-                              size: 50.0,
-                              color: Colors.white,
-                            )
-                          : Image.network(
-                              _imageUrlController.text,
-                              fit: BoxFit.contain,
-                            ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                validator: (value) => validateNonEmpty(value, 'title'),
+                onSaved: (newVal) => _formInput['title'] = newVal,
+                onFieldSubmitted: (_) {
+                  focusScope.requestFocus(_priceFocusNode);
+                },
+                textInputAction: TextInputAction.next,
+              ),
+              TextFormField(
+                focusNode: _priceFocusNode,
+                decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  final number = double.tryParse(value);
+                  if (number == null) {
+                    return 'The price must be a valid number.';
+                  }
+                  if (number <= 0.0) return 'The price must be positive.';
+                  return null;
+                },
+                onSaved: (v) => _formInput['price'] = Price(double.parse(v)),
+                onFieldSubmitted: (_) {
+                  focusScope.requestFocus(_descriptionFocusNode);
+                },
+                textInputAction: TextInputAction.next,
+              ),
+              TextFormField(
+                focusNode: _descriptionFocusNode,
+                decoration: const InputDecoration(labelText: 'Description'),
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                validator: (value) => validateNonEmpty(value, 'description'),
+                onSaved: (newVal) => _formInput['description'] = newVal,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 25.0, right: 15.0),
+                    width: imageSize,
+                    height: imageSize,
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.black38,
                     ),
-                    Expanded(
-                      child: TextFormField(
-                        focusNode: _imageUrlFocusNode,
-                        controller: _imageUrlController,
-                        decoration: const InputDecoration(
-                          labelText: 'Image URL',
-                        ),
-                        keyboardType: TextInputType.url,
-                        onSaved: (newVal) => _formInput['imageUrl'] = newVal,
-                        onFieldSubmitted: (_) => _saveForm(),
+                    child: _imageUrlController.text.isEmpty
+                        ? const Icon(
+                            Icons.image_outlined,
+                            size: 50.0,
+                            color: Colors.white,
+                          )
+                        : Image.network(
+                            _imageUrlController.text,
+                            fit: BoxFit.contain,
+                          ),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      focusNode: _imageUrlFocusNode,
+                      controller: _imageUrlController,
+                      decoration: const InputDecoration(
+                        labelText: 'Image URL',
                       ),
+                      keyboardType: TextInputType.url,
+                      validator: (val) {
+                        return RegExp(
+                          r'^(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?$',
+                          caseSensitive: false,
+                        ).hasMatch(val)
+                            ? null
+                            : 'The image URL must be valid.';
+                      },
+                      onSaved: (newVal) => _formInput['imageUrl'] = newVal,
+                      onFieldSubmitted: (_) => _saveForm(),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

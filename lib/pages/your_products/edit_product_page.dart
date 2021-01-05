@@ -14,13 +14,16 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
+  var _isInitialized = false;
   final _formInput = {
     'id': null,
     'title': '',
     'description': '',
-    'price': Price(0.0),
+    'price': null,
     'imageUrl': '',
+    'isWished': false,
   };
+  final _initialValues = {'price': ''};
   final _formKey = GlobalKey<FormState>();
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
@@ -35,15 +38,22 @@ class _EditProductPageState extends State<EditProductPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
+      final products = Provider.of<Products>(context, listen: false);
       final newProduct = Product(
         id: _formInput['id'],
         title: _formInput['title'],
         description: _formInput['description'],
         price: _formInput['price'],
         imageUrl: _formInput['imageUrl'],
+        isWished: _formInput['isWished'],
       );
 
-      Provider.of<Products>(context, listen: false).add(newProduct);
+      if (newProduct.id == null) {
+        products.add(newProduct);
+      } else {
+        products.update(newProduct);
+      }
+
       Navigator.of(context).pop();
     }
   }
@@ -56,6 +66,30 @@ class _EditProductPageState extends State<EditProductPage> {
   void initState() {
     super.initState();
     _imageUrlFocusNode.addListener(_updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInitialized) {
+      final id = ModalRoute.of(context).settings.arguments as String;
+
+      if (id != null) {
+        final prod = Provider.of<Products>(context, listen: false).findById(id);
+        _formInput['id'] = prod.id;
+        _formInput['title'] = prod.title;
+        _formInput['description'] = prod.description;
+        _formInput['price'] = prod.price;
+        _formInput['imageUrl'] = prod.imageUrl;
+        _formInput['isWished'] = prod.isWished;
+        _initialValues['price'] = _formInput['price'].toString();
+        _imageUrlController.text = _formInput['imageUrl'];
+      }
+      _initialValues['title'] = _formInput['title'];
+      _initialValues['description'] = _formInput['description'];
+
+      _isInitialized = true;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -85,6 +119,7 @@ class _EditProductPageState extends State<EditProductPage> {
           child: Column(
             children: [
               TextFormField(
+                initialValue: _initialValues['title'],
                 decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) => validateNonEmpty(value, 'title'),
                 onSaved: (newVal) => _formInput['title'] = newVal,
@@ -95,6 +130,7 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               TextFormField(
                 focusNode: _priceFocusNode,
+                initialValue: _initialValues['price'],
                 decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -113,6 +149,7 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               TextFormField(
                 focusNode: _descriptionFocusNode,
+                initialValue: _initialValues['description'],
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,

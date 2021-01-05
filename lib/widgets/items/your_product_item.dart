@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/products/product.dart';
+import '../../pages/your_products/edit_product_page.dart';
 
 class YourProductItem extends StatelessWidget {
   @override
@@ -18,7 +19,12 @@ class YourProductItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                EditProductPage.routeName,
+                arguments: yourProduct.id,
+              );
+            },
             color: Colors.blue,
             icon: const Icon(Icons.edit),
           ),

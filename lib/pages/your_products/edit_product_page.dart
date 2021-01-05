@@ -51,7 +51,7 @@ class _EditProductPageState extends State<EditProductPage> {
       if (newProduct.id == null) {
         products.add(newProduct);
       } else {
-        products.update(newProduct);
+        products.replace(newProduct);
       }
 
       Navigator.of(context).pop();

@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import '../utils/price.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
+  static const url =
+      'https://shop-app-a5aa4-default-rtdb.firebaseio.com/products.json';
+
   var _values = [
     Product(
       id: 'p1',
@@ -50,6 +56,9 @@ class Products with ChangeNotifier {
   }
 
   void add(Product product) {
+    final productMap = product.toMapWithoutId();
+    productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
+    http.post(url, body: json.encode(productMap));
     final productWithId = product.copyWithId(DateTime.now().toString());
     _values.add(productWithId);
     notifyListeners();

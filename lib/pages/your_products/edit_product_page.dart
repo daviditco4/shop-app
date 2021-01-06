@@ -15,15 +15,15 @@ class EditProductPage extends StatefulWidget {
 
 class _EditProductPageState extends State<EditProductPage> {
   var _isInitialized = false;
-  final _formInput = {
-    'id': null,
-    'title': '',
-    'description': '',
-    'price': null,
-    'imageUrl': '',
-    'isWished': false,
+  var _formInput = {
+    Product.idKey: null,
+    Product.tleKey: '',
+    Product.dscKey: '',
+    Product.prcKey: null,
+    Product.imgKey: '',
+    Product.wshKey: false,
   };
-  final _initialValues = {'price': ''};
+  final _initialValues = {Product.prcKey: ''};
   final _formKey = GlobalKey<FormState>();
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
@@ -39,14 +39,7 @@ class _EditProductPageState extends State<EditProductPage> {
       _formKey.currentState.save();
 
       final products = Provider.of<Products>(context, listen: false);
-      final newProduct = Product(
-        id: _formInput['id'],
-        title: _formInput['title'],
-        description: _formInput['description'],
-        price: _formInput['price'],
-        imageUrl: _formInput['imageUrl'],
-        isWished: _formInput['isWished'],
-      );
+      final newProduct = Product.fromMap(_formInput);
 
       if (newProduct.id == null) {
         products.add(newProduct);
@@ -75,17 +68,12 @@ class _EditProductPageState extends State<EditProductPage> {
 
       if (id != null) {
         final prod = Provider.of<Products>(context, listen: false).findById(id);
-        _formInput['id'] = prod.id;
-        _formInput['title'] = prod.title;
-        _formInput['description'] = prod.description;
-        _formInput['price'] = prod.price;
-        _formInput['imageUrl'] = prod.imageUrl;
-        _formInput['isWished'] = prod.isWished;
-        _initialValues['price'] = _formInput['price'].toString();
-        _imageUrlController.text = _formInput['imageUrl'];
+        _formInput = prod.toMapWithId();
+        _initialValues[Product.prcKey] = _formInput[Product.prcKey].toString();
+        _imageUrlController.text = _formInput[Product.imgKey];
       }
-      _initialValues['title'] = _formInput['title'];
-      _initialValues['description'] = _formInput['description'];
+      _initialValues[Product.tleKey] = _formInput[Product.tleKey];
+      _initialValues[Product.dscKey] = _formInput[Product.dscKey];
 
       _isInitialized = true;
     }
@@ -119,10 +107,10 @@ class _EditProductPageState extends State<EditProductPage> {
           child: Column(
             children: [
               TextFormField(
-                initialValue: _initialValues['title'],
+                initialValue: _initialValues[Product.tleKey],
                 decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) => validateNonEmpty(value, 'title'),
-                onSaved: (newVal) => _formInput['title'] = newVal,
+                validator: (value) => validateNonEmpty(value, Product.tleKey),
+                onSaved: (newVal) => _formInput[Product.tleKey] = newVal,
                 onFieldSubmitted: (_) {
                   focusScope.requestFocus(_priceFocusNode);
                 },
@@ -130,7 +118,7 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               TextFormField(
                 focusNode: _priceFocusNode,
-                initialValue: _initialValues['price'],
+                initialValue: _initialValues[Product.prcKey],
                 decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -141,7 +129,9 @@ class _EditProductPageState extends State<EditProductPage> {
                   if (number <= 0.0) return 'The price must be positive.';
                   return null;
                 },
-                onSaved: (v) => _formInput['price'] = Price(double.parse(v)),
+                onSaved: (value) {
+                  _formInput[Product.prcKey] = Price(double.parse(value));
+                },
                 onFieldSubmitted: (_) {
                   focusScope.requestFocus(_descriptionFocusNode);
                 },
@@ -149,12 +139,12 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               TextFormField(
                 focusNode: _descriptionFocusNode,
-                initialValue: _initialValues['description'],
+                initialValue: _initialValues[Product.dscKey],
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
-                validator: (value) => validateNonEmpty(value, 'description'),
-                onSaved: (newVal) => _formInput['description'] = newVal,
+                validator: (value) => validateNonEmpty(value, Product.dscKey),
+                onSaved: (newVal) => _formInput[Product.dscKey] = newVal,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -194,7 +184,7 @@ class _EditProductPageState extends State<EditProductPage> {
                             ? null
                             : 'The image URL must be valid.';
                       },
-                      onSaved: (newVal) => _formInput['imageUrl'] = newVal,
+                      onSaved: (newVal) => _formInput[Product.imgKey] = newVal,
                       onFieldSubmitted: (_) => _saveForm(),
                     ),
                   ),

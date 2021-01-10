@@ -55,13 +55,16 @@ class Products with ChangeNotifier {
     return _values.firstWhere((product) => product.id == id);
   }
 
-  void add(Product product) {
+  Future<void> add(Product product) {
     final productMap = product.toMapWithoutId();
     productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
-    http.post(url, body: json.encode(productMap));
-    final productWithId = product.copyWithId(DateTime.now().toString());
-    _values.add(productWithId);
-    notifyListeners();
+
+    return http.post(url, body: json.encode(productMap)).then(
+      (response) {
+        _values.add(product.copyWithId(json.decode(response.body)['name']));
+        notifyListeners();
+      },
+    );
   }
 
   void replace(Product product) {

@@ -24,23 +24,20 @@ class YourProductsOverviewPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Consumer<Products>(
-          builder: (_, productsProvider, __) {
-            final products = productsProvider.values;
-            return ListView.separated(
-              itemCount: products.length,
-              itemBuilder: (_, index) {
-                return ChangeNotifierProvider.value(
-                  value: products[index],
-                  child: YourProductItem(),
-                );
-              },
-              separatorBuilder: (_, __) => const Divider(),
-            );
-          },
-        ),
+      body: Consumer<Products>(
+        builder: (_, productsProvider, __) {
+          final products = productsProvider.values;
+          return ListView.separated(
+            itemCount: products.length,
+            itemBuilder: (_, index) {
+              return ChangeNotifierProvider.value(
+                value: products[index],
+                child: YourProductItem(),
+              );
+            },
+            separatorBuilder: (_, __) => const Divider(),
+          );
+        },
       ),
     );
   }

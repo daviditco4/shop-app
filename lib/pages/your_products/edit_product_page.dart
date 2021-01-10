@@ -14,6 +14,7 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
+  var _isLoading = false;
   var _isInitialized = false;
   var _formInput = {
     Product.idKey: null,
@@ -41,13 +42,14 @@ class _EditProductPageState extends State<EditProductPage> {
       final products = Provider.of<Products>(context, listen: false);
       final newProduct = Product.fromMap(_formInput);
 
+      setState(() => _isLoading = true);
+
       if (newProduct.id == null) {
-        products.add(newProduct);
+        products.add(newProduct).then((_) => Navigator.of(context).pop());
       } else {
         products.replace(newProduct);
+        Navigator.of(context).pop();
       }
-
-      Navigator.of(context).pop();
     }
   }
 
@@ -98,102 +100,109 @@ class _EditProductPageState extends State<EditProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Product'),
-        actions: [FlatButton(onPressed: _saveForm, child: const Text('SAVE'))],
+        actions: _isLoading
+            ? []
+            : [FlatButton(onPressed: _saveForm, child: const Text('SAVE'))],
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _initialValues[Product.tleKey],
-                decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) => validateNonEmpty(value, Product.tleKey),
-                onSaved: (newVal) => _formInput[Product.tleKey] = newVal,
-                onFieldSubmitted: (_) {
-                  focusScope.requestFocus(_priceFocusNode);
-                },
-                textInputAction: TextInputAction.next,
-              ),
-              TextFormField(
-                focusNode: _priceFocusNode,
-                initialValue: _initialValues[Product.prcKey],
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  final number = double.tryParse(value);
-                  if (number == null) {
-                    return 'The price must be a valid number.';
-                  }
-                  if (number <= 0.0) return 'The price must be positive.';
-                  return null;
-                },
-                onSaved: (value) {
-                  _formInput[Product.prcKey] = Price(double.parse(value));
-                },
-                onFieldSubmitted: (_) {
-                  focusScope.requestFocus(_descriptionFocusNode);
-                },
-                textInputAction: TextInputAction.next,
-              ),
-              TextFormField(
-                focusNode: _descriptionFocusNode,
-                initialValue: _initialValues[Product.dscKey],
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-                keyboardType: TextInputType.multiline,
-                validator: (value) => validateNonEmpty(value, Product.dscKey),
-                onSaved: (newVal) => _formInput[Product.dscKey] = newVal,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 25.0, right: 15.0),
-                    width: imageSize,
-                    height: imageSize,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      color: Colors.black38,
-                    ),
-                    child: _imageUrlController.text.isEmpty
-                        ? const Icon(
-                            Icons.image_outlined,
-                            size: 50.0,
-                            color: Colors.white,
-                          )
-                        : Image.network(
-                            _imageUrlController.text,
-                            fit: BoxFit.contain,
-                          ),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      focusNode: _imageUrlFocusNode,
-                      controller: _imageUrlController,
-                      decoration: const InputDecoration(
-                        labelText: 'Image URL',
-                      ),
-                      keyboardType: TextInputType.url,
-                      validator: (val) {
-                        return RegExp(
-                          r'^(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?$',
-                          caseSensitive: false,
-                        ).hasMatch(val)
-                            ? null
-                            : 'The image URL must be valid.';
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      initialValue: _initialValues[Product.tleKey],
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      validator: (val) => validateNonEmpty(val, Product.tleKey),
+                      onSaved: (newVal) => _formInput[Product.tleKey] = newVal,
+                      onFieldSubmitted: (_) {
+                        focusScope.requestFocus(_priceFocusNode);
                       },
-                      onSaved: (newVal) => _formInput[Product.imgKey] = newVal,
-                      onFieldSubmitted: (_) => _saveForm(),
+                      textInputAction: TextInputAction.next,
                     ),
-                  ),
-                ],
+                    TextFormField(
+                      focusNode: _priceFocusNode,
+                      initialValue: _initialValues[Product.prcKey],
+                      decoration: const InputDecoration(labelText: 'Price'),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        final number = double.tryParse(value);
+                        if (number == null) {
+                          return 'The price must be a valid number.';
+                        }
+                        if (number <= 0.0) return 'The price must be positive.';
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _formInput[Product.prcKey] = Price(double.parse(value));
+                      },
+                      onFieldSubmitted: (_) {
+                        focusScope.requestFocus(_descriptionFocusNode);
+                      },
+                      textInputAction: TextInputAction.next,
+                    ),
+                    TextFormField(
+                      focusNode: _descriptionFocusNode,
+                      initialValue: _initialValues[Product.dscKey],
+                      decoration: const InputDecoration(
+                        labelText: 'Description',
+                      ),
+                      maxLines: 3,
+                      keyboardType: TextInputType.multiline,
+                      validator: (val) => validateNonEmpty(val, Product.dscKey),
+                      onSaved: (newVal) => _formInput[Product.dscKey] = newVal,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 25.0, right: 15.0),
+                          width: imageSize,
+                          height: imageSize,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.black38,
+                          ),
+                          child: _imageUrlController.text.isEmpty
+                              ? const Icon(
+                                  Icons.image_outlined,
+                                  size: 50.0,
+                                  color: Colors.white,
+                                )
+                              : Image.network(
+                                  _imageUrlController.text,
+                                  fit: BoxFit.contain,
+                                ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            focusNode: _imageUrlFocusNode,
+                            controller: _imageUrlController,
+                            decoration: const InputDecoration(
+                              labelText: 'Image URL',
+                            ),
+                            keyboardType: TextInputType.url,
+                            validator: (val) {
+                              return RegExp(
+                                r'^(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?$',
+                                caseSensitive: false,
+                              ).hasMatch(val)
+                                  ? null
+                                  : 'The image URL must be valid.';
+                            },
+                            onSaved: (newV) =>
+                                _formInput[Product.imgKey] = newV,
+                            onFieldSubmitted: (_) => _saveForm(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

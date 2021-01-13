@@ -35,7 +35,7 @@ class _EditProductPageState extends State<EditProductPage> {
     return value.isEmpty ? 'The $label must not be empty.' : null;
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -45,7 +45,27 @@ class _EditProductPageState extends State<EditProductPage> {
       setState(() => _isLoading = true);
 
       if (newProduct.id == null) {
-        products.add(newProduct).then((_) => Navigator.of(context).pop());
+        try {
+          await products.add(newProduct);
+        } catch (e) {
+          await showDialog<Null>(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Something went wrong.'),
+                actions: [
+                  FlatButton(
+                    onPressed: Navigator.of(ctx).pop,
+                    child: const Text('CLOSE'),
+                  ),
+                ],
+              );
+            },
+          );
+        } finally {
+          Navigator.of(context).pop();
+        }
       } else {
         products.replace(newProduct);
         Navigator.of(context).pop();

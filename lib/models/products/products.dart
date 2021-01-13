@@ -7,7 +7,7 @@ import '../utils/price.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  static const url =
+  static const _url =
       'https://shop-app-a5aa4-default-rtdb.firebaseio.com/products.json';
 
   var _values = [
@@ -55,16 +55,18 @@ class Products with ChangeNotifier {
     return _values.firstWhere((product) => product.id == id);
   }
 
-  Future<void> add(Product product) {
+  Future<void> add(Product product) async {
     final productMap = product.toMapWithoutId();
     productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
 
-    return http.post(url, body: json.encode(productMap)).then(
-      (response) {
-        _values.add(product.copyWithId(json.decode(response.body)['name']));
-        notifyListeners();
-      },
-    );
+    try {
+      final response = await http.post(_url, body: json.encode(productMap));
+      _values.add(product.copyWithId(json.decode(response.body)['name']));
+      notifyListeners();
+    } catch (e) {
+      print('Error in products.dart: $e');
+      throw e;
+    }
   }
 
   void replace(Product product) {

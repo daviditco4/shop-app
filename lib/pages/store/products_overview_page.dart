@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/cart/cart.dart';
+import '../../models/products/products.dart';
 import '../../widgets/other/badge.dart';
 import '../../widgets/other/main_drawer.dart';
 import '../../widgets/other/products_grid.dart';
@@ -15,7 +16,16 @@ class ProductsOverviewPage extends StatefulWidget {
 }
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
+  var _isLoading = true;
   var _filtering = Filtering.none;
+
+  @override
+  void initState() {
+    Provider.of<Products>(context, listen: false).pull().then((_) {
+      setState(() => _isLoading = false);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +58,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
-      body: ProductsGrid(_filtering),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductsGrid(_filtering),
     );
   }
 }

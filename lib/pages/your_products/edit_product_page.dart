@@ -44,30 +44,29 @@ class _EditProductPageState extends State<EditProductPage> {
 
       setState(() => _isLoading = true);
 
-      if (newProduct.id == null) {
-        try {
+      try {
+        if (newProduct.id == null) {
           await products.add(newProduct);
-        } catch (e) {
-          await showDialog<Null>(
-            context: context,
-            builder: (ctx) {
-              return AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Something went wrong.'),
-                actions: [
-                  FlatButton(
-                    onPressed: Navigator.of(ctx).pop,
-                    child: const Text('CLOSE'),
-                  ),
-                ],
-              );
-            },
-          );
-        } finally {
-          Navigator.of(context).pop();
+        } else {
+          await products.replace(newProduct);
         }
-      } else {
-        products.replace(newProduct);
+      } catch (e) {
+        await showDialog<Null>(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Something went wrong.'),
+              actions: [
+                FlatButton(
+                  onPressed: Navigator.of(ctx).pop,
+                  child: const Text('CLOSE'),
+                ),
+              ],
+            );
+          },
+        );
+      } finally {
         Navigator.of(context).pop();
       }
     }

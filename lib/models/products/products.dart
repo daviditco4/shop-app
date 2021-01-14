@@ -63,9 +63,21 @@ class Products with ChangeNotifier {
     }
   }
 
-  void replace(Product product) {
-    _values[_values.indexWhere((prod) => prod.id == product.id)] = product;
-    notifyListeners();
+  Future<void> replace(Product product) async {
+    final productMap = product.toMapWithoutId();
+    productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
+
+    try {
+      await http.patch(
+        _url.replaceFirst(RegExp(r'\.json$'), '/${product.id}.json'),
+        body: json.encode(productMap),
+      );
+      _values[_values.indexWhere((prod) => prod.id == product.id)] = product;
+      notifyListeners();
+    } catch (e) {
+      print('Error in products.dart: $e');
+      throw e;
+    }
   }
 
   void delete(String productId) {

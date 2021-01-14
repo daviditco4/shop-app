@@ -60,7 +60,12 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ProductsGrid(_filtering),
+          : RefreshIndicator(
+              onRefresh: () {
+                return Provider.of<Products>(context, listen: false).pull();
+              },
+              child: ProductsGrid(_filtering),
+            ),
     );
   }
 }

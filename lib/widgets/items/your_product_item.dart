@@ -10,6 +10,7 @@ class YourProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     return ListTile(
       leading: CircleAvatar(backgroundImage: NetworkImage(product.imageUrl)),
@@ -29,8 +30,8 @@ class YourProductItem extends StatelessWidget {
             icon: const Icon(Icons.edit),
           ),
           IconButton(
-            onPressed: () {
-              showDialog<bool>(
+            onPressed: () async {
+              final confirmation = await showDialog<bool>(
                 context: context,
                 builder: (_) {
                   return const AlertDialog(
@@ -42,16 +43,20 @@ class YourProductItem extends StatelessWidget {
                     ],
                   );
                 },
-              ).then(
-                (confirmation) {
-                  if (confirmation) {
-                    Provider.of<Products>(
-                      context,
-                      listen: false,
-                    ).delete(product.id);
-                  }
-                },
               );
+
+              if (confirmation) {
+                try {
+                  await Provider.of<Products>(
+                    context,
+                    listen: false,
+                  ).delete(product.id);
+                } catch (e) {
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(content: Text('$e', textAlign: TextAlign.center)),
+                  );
+                }
+              }
             },
             color: Theme.of(context).errorColor,
             icon: const Icon(Icons.delete),

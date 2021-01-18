@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import '../utils/price.dart';
+import 'products.dart';
 
 class Product with ChangeNotifier {
   static const idKey = 'id';
@@ -42,6 +46,8 @@ class Product with ChangeNotifier {
   final String imageUrl;
   bool isWished;
 
+  String get url => Products.url.replaceFirst('.json', '/$id.json');
+
   Map<String, Object> toMapWithoutId() {
     return {
       tleKey: title,
@@ -58,9 +64,18 @@ class Product with ChangeNotifier {
     return map;
   }
 
-  void toggleWished() {
+  Future<void> toggleWished() async {
     isWished = !isWished;
     notifyListeners();
+
+    try {
+      await http.patch(url, body: json.encode({wshKey: isWished}));
+    } catch (e) {
+      isWished = !isWished;
+      notifyListeners();
+      print(e);
+      throw e;
+    }
   }
 
   Product copyWithId(String newId) {

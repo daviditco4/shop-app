@@ -8,9 +8,8 @@ import '../utils/price.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  static const _url =
+  static const url =
       'https://shop-app-a5aa4-default-rtdb.firebaseio.com/products.json';
-  String _specificUrl(String id) => _url.replaceFirst('.json', '/$id.json');
   List<Product> _values = [];
   List<Product> get values => [..._values];
 
@@ -24,7 +23,7 @@ class Products with ChangeNotifier {
 
   Future<void> pull() async {
     try {
-      final response = await http.get(_url);
+      final response = await http.get(url);
       final valuesMap = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedValues = [];
 
@@ -56,7 +55,7 @@ class Products with ChangeNotifier {
     productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
 
     try {
-      final response = await http.post(_url, body: json.encode(productMap));
+      final response = await http.post(url, body: json.encode(productMap));
       _values.add(product.copyWithId(json.decode(response.body)['name']));
       notifyListeners();
     } catch (e) {
@@ -70,7 +69,7 @@ class Products with ChangeNotifier {
     productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
 
     try {
-      await http.patch(_specificUrl(product.id), body: json.encode(productMap));
+      await http.patch(product.url, body: json.encode(productMap));
       _values[_values.indexWhere((prod) => prod.id == product.id)] = product;
       notifyListeners();
     } catch (e) {
@@ -85,14 +84,13 @@ class Products with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.delete(_specificUrl(productId));
+      final response = await http.delete(product.url);
       if (response.statusCode >= 400) {
         throw const HtmlException('Could not delete the product.');
       }
     } catch (e) {
       _values.insert(productIndex, product);
       notifyListeners();
-
       print(e);
       throw e;
     }

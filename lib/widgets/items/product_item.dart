@@ -34,12 +34,25 @@ class ProductItem extends StatelessWidget {
           footer: GridTileBar(
             backgroundColor: Colors.black87,
             leading: Consumer<Product>(
-              builder: (_, prod, __) {
+              builder: (ctx, prod, __) {
+                final scaffoldMessenger = ScaffoldMessenger.of(ctx);
+
                 return IconButton(
                   icon: Icon(
                     prod.isWished ? Icons.favorite : Icons.favorite_border,
                   ),
-                  onPressed: prod.toggleWished,
+                  onPressed: () async {
+                    try {
+                      await prod.toggleWished();
+                    } catch (e) {
+                      scaffoldMessenger.hideCurrentSnackBar();
+                      scaffoldMessenger.showSnackBar(
+                        const SnackBar(
+                          content: Text('Could not update wish list.'),
+                        ),
+                      );
+                    }
+                  },
                   color: accentColor,
                 );
               },
@@ -53,12 +66,10 @@ class ProductItem extends StatelessWidget {
               icon: Icon(Icons.add_shopping_cart),
               onPressed: () {
                 final cart = Provider.of<Cart>(context, listen: false);
-                final scaffold = Scaffold.of(context);
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
                 cart.addSingleProduct(product.id);
-                // ignore: deprecated_member_use
-                scaffold.hideCurrentSnackBar();
-                // ignore: deprecated_member_use
-                scaffold.showSnackBar(
+                scaffoldMessenger.hideCurrentSnackBar();
+                scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: const Text('Product added to cart!'),
                     action: SnackBarAction(

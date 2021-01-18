@@ -53,7 +53,12 @@ class YourProductItem extends StatelessWidget {
                   ).delete(product.id);
                 } catch (e) {
                   scaffoldMessenger.showSnackBar(
-                    SnackBar(content: Text('$e', textAlign: TextAlign.center)),
+                    const SnackBar(
+                      content: Text(
+                        'Could not delete the product.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   );
                 }
               }

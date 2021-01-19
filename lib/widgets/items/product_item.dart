@@ -48,7 +48,10 @@ class ProductItem extends StatelessWidget {
                       scaffoldMessenger.hideCurrentSnackBar();
                       scaffoldMessenger.showSnackBar(
                         const SnackBar(
-                          content: Text('Could not update wish list.'),
+                          content: Text(
+                            'Could not update the wish list.',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       );
                     }

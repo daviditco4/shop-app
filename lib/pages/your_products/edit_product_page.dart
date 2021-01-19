@@ -118,7 +118,11 @@ class _EditProductPageState extends State<EditProductPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Product'),
+        title: Text(
+          _formInput[Product.idKey] == null
+              ? 'Add New Product'
+              : 'Edit Product',
+        ),
         actions: _isLoading
             ? []
             : [FlatButton(onPressed: _saveForm, child: const Text('SAVE'))],

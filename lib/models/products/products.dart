@@ -59,7 +59,7 @@ class Products with ChangeNotifier {
       _values.add(product.copyWithId(json.decode(response.body)['name']));
       notifyListeners();
     } catch (e) {
-      print('Error in products.dart: $e');
+      print(e);
       throw e;
     }
   }
@@ -69,11 +69,14 @@ class Products with ChangeNotifier {
     productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
 
     try {
-      await http.patch(product.url, body: json.encode(productMap));
+      final res = await http.patch(product.url, body: json.encode(productMap));
+      if (res.statusCode >= 400) {
+        throw const HtmlException('Could not edit the product.');
+      }
       _values[_values.indexWhere((prod) => prod.id == product.id)] = product;
       notifyListeners();
     } catch (e) {
-      print('Error in products.dart: $e');
+      print(e);
       throw e;
     }
   }

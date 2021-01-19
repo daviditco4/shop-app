@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+import '../exceptions/html_exception.dart';
 import '../utils/price.dart';
 import 'products.dart';
 
@@ -69,7 +70,10 @@ class Product with ChangeNotifier {
     notifyListeners();
 
     try {
-      await http.patch(url, body: json.encode({wshKey: isWished}));
+      final res = await http.patch(url, body: json.encode({wshKey: isWished}));
+      if (res.statusCode >= 400) {
+        throw const HtmlException('Could not update the wish list.');
+      }
     } catch (e) {
       isWished = !isWished;
       notifyListeners();

@@ -89,7 +89,7 @@ class _EditProductPageState extends State<EditProductPage> {
 
       if (id != null) {
         final prod = Provider.of<Products>(context, listen: false).findById(id);
-        _formInput = prod.toMapWithId();
+        _formInput = prod.toMap();
         _initialValues[Product.prcKey] = _formInput[Product.prcKey].toString();
         _imageUrlController.text = _formInput[Product.imgKey];
       }

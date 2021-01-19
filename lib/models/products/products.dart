@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../exceptions/html_exception.dart';
-import '../utils/price.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -31,14 +30,7 @@ class Products with ChangeNotifier {
         (productId, productData) {
           loadedValues.insert(
             0,
-            Product(
-              id: productId,
-              title: productData[Product.tleKey],
-              description: productData[Product.dscKey],
-              price: Price(productData[Product.prcKey]),
-              imageUrl: productData[Product.imgKey],
-              isWished: productData[Product.wshKey],
-            ),
+            Product.fromHtmlResponse(productId, productData),
           );
         },
       );
@@ -51,8 +43,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> add(Product product) async {
-    final productMap = product.toMapWithoutId();
-    productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
+    final productMap = product.toEncodableMapWithoutId();
 
     try {
       final response = await http.post(url, body: json.encode(productMap));
@@ -65,8 +56,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> replace(Product product) async {
-    final productMap = product.toMapWithoutId();
-    productMap[Product.prcKey] = (productMap[Product.prcKey] as Price).amount;
+    final productMap = product.toEncodableMapWithoutId();
 
     try {
       final res = await http.patch(product.url, body: json.encode(productMap));

@@ -40,6 +40,16 @@ class Product with ChangeNotifier {
         imageUrl = map[imgKey],
         isWished = map[wshKey];
 
+  Product.fromHtmlResponse(String id, Map<String, Object> map)
+      : this(
+          id: id,
+          title: map[tleKey],
+          description: map[dscKey],
+          price: Price(map[prcKey]),
+          imageUrl: map[imgKey],
+          isWished: map[wshKey],
+        );
+
   final String id;
   final String title;
   final String description;
@@ -49,20 +59,25 @@ class Product with ChangeNotifier {
 
   String get url => Products.url.replaceFirst('.json', '/$id.json');
 
-  Map<String, Object> toMapWithoutId() {
+  Map<String, Object> toEncodableMapWithoutId() {
     return {
+      tleKey: title,
+      dscKey: description,
+      prcKey: price.amount,
+      imgKey: imageUrl,
+      wshKey: isWished,
+    };
+  }
+
+  Map<String, Object> toMap() {
+    return {
+      idKey: id,
       tleKey: title,
       dscKey: description,
       prcKey: price,
       imgKey: imageUrl,
       wshKey: isWished,
     };
-  }
-
-  Map<String, Object> toMapWithId() {
-    final Map<String, Object> map = {idKey: id};
-    map.addAll(toMapWithoutId());
-    return map;
   }
 
   Future<void> toggleWished() async {
@@ -89,6 +104,7 @@ class Product with ChangeNotifier {
       description: description,
       price: price,
       imageUrl: imageUrl,
+      isWished: isWished,
     );
   }
 }

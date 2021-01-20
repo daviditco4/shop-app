@@ -21,10 +21,11 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
 
   @override
   void initState() {
-    Provider.of<Products>(context, listen: false).pull().then((_) {
-      setState(() => _isLoading = false);
-    });
     super.initState();
+    Provider.of<Products>(
+      context,
+      listen: false,
+    ).pull().then((_) => setState(() => _isLoading = false));
   }
 
   @override
@@ -61,9 +62,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: () {
-                return Provider.of<Products>(context, listen: false).pull();
-              },
+              onRefresh: Provider.of<Products>(context, listen: false).pull,
               child: ProductsGrid(_filtering),
             ),
     );

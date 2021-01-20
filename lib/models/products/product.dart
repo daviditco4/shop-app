@@ -34,14 +34,14 @@ class Product with ChangeNotifier {
           isWished: map[wshKey],
         );
 
-  Product.fromHtmlResponse(String id, Map<String, Object> map)
+  Product.fromIdAndDataEncodableMap(String id, Map<String, Object> dataMap)
       : this(
           id: id,
-          title: map[tleKey],
-          description: map[dscKey],
-          price: Price(map[prcKey]),
-          imageUrl: map[imgKey],
-          isWished: map[wshKey],
+          title: dataMap[tleKey],
+          description: dataMap[dscKey],
+          price: Price(dataMap[prcKey]),
+          imageUrl: dataMap[imgKey],
+          isWished: dataMap[wshKey],
         );
 
   final String id;

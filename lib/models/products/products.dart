@@ -27,8 +27,8 @@ class Products with ChangeNotifier {
       final List<Product> loadedValues = [];
 
       valuesMap.forEach(
-        (productId, productData) {
-          loadedValues.add(Product.fromHtmlResponse(productId, productData));
+        (prodId, prodData) {
+          loadedValues.add(Product.fromIdAndDataEncodableMap(prodId, prodData));
         },
       );
 

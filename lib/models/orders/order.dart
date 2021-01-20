@@ -12,6 +12,17 @@ class Order with ChangeNotifier {
     @required this.dateTime,
   });
 
+  Order.fromIdItemsAndDataEncodableMap(
+    String id,
+    List<CartItem> items,
+    Map<String, Object> dataMap,
+  ) : this(
+          id: id,
+          totalCost: Price(dataMap['totalCost']),
+          items: items,
+          dateTime: DateTime.parse(dataMap['dateTime']),
+        );
+
   final String id;
   final Price totalCost;
   final List<CartItem> items;

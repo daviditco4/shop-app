@@ -10,9 +10,44 @@ import 'order.dart';
 class Orders with ChangeNotifier {
   static const url =
       'https://shop-app-a5aa4-default-rtdb.firebaseio.com/orders.json';
-  final List<Order> _list = [];
+  var _list = <Order>[];
   List<Order> get list => [..._list];
   int get quantity => _list.length;
+
+  Future<void> pull() async {
+    try {
+      final response = await http.get(url);
+      final ordersMap = json.decode(response.body) as Map<String, dynamic>;
+      final loadedOrders = <Order>[];
+
+      ordersMap.forEach(
+        (orderId, orderData) {
+          final loadedItems = <CartItem>[];
+
+          (orderData['items'] as Map<String, dynamic>).forEach(
+            (itemId, itemData) {
+              loadedItems.add(
+                CartItem.fromIdAndDataEncodableMap(itemId, itemData),
+              );
+            },
+          );
+
+          loadedOrders.add(
+            Order.fromIdItemsAndDataEncodableMap(
+              orderId,
+              loadedItems,
+              orderData,
+            ),
+          );
+        },
+      );
+
+      _list = loadedOrders;
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
 
   Future<void> add(Cart cart) async {
     var order = Order(

@@ -10,6 +10,14 @@ class CartItem with ChangeNotifier {
     @required this.quantity,
   });
 
+  CartItem.fromIdAndDataEncodableMap(String id, Map<String, Object> dataMap)
+      : this(
+          id: id,
+          title: dataMap['title'],
+          unitPrice: Price(dataMap['unitPrice']),
+          quantity: dataMap['quantity'],
+        );
+
   final String id;
   final String title;
   final Price unitPrice;

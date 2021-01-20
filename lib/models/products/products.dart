@@ -24,15 +24,17 @@ class Products with ChangeNotifier {
     try {
       final response = await http.get(url);
       final valuesMap = json.decode(response.body) as Map<String, dynamic>;
-      final List<Product> loadedValues = [];
+      final List<Product> loadedVals = [];
 
-      valuesMap.forEach(
-        (prodId, prodData) {
-          loadedValues.add(Product.fromIdAndDataEncodableMap(prodId, prodData));
-        },
-      );
+      if (valuesMap != null) {
+        valuesMap.forEach(
+          (prodId, prodData) {
+            loadedVals.add(Product.fromIdAndDataEncodableMap(prodId, prodData));
+          },
+        );
+      }
 
-      _values = loadedValues;
+      _values = loadedVals;
       notifyListeners();
     } catch (e) {
       throw e;

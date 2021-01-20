@@ -74,9 +74,13 @@ class Product with ChangeNotifier {
     };
   }
 
-  Future<void> toggleWished() async {
+  void _toggleWishedAndNotifyOnly() {
     isWished = !isWished;
     notifyListeners();
+  }
+
+  Future<void> toggleWished() async {
+    _toggleWishedAndNotifyOnly();
 
     try {
       final res = await http.patch(url, body: json.encode({wshKey: isWished}));
@@ -84,8 +88,7 @@ class Product with ChangeNotifier {
         throw const HtmlException('Could not update the wish list.');
       }
     } catch (e) {
-      isWished = !isWished;
-      notifyListeners();
+      _toggleWishedAndNotifyOnly();
       print(e);
       throw e;
     }

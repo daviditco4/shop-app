@@ -20,27 +20,29 @@ class Orders with ChangeNotifier {
       final ordersMap = json.decode(response.body) as Map<String, dynamic>;
       final loadedOrders = <Order>[];
 
-      ordersMap.forEach(
-        (orderId, orderData) {
-          final loadedItems = <CartItem>[];
+      if (ordersMap != null) {
+        ordersMap.forEach(
+          (orderId, orderData) {
+            final loadedItems = <CartItem>[];
 
-          (orderData['items'] as Map<String, dynamic>).forEach(
-            (itemId, itemData) {
-              loadedItems.add(
-                CartItem.fromIdAndDataEncodableMap(itemId, itemData),
-              );
-            },
-          );
+            (orderData['items'] as Map<String, dynamic>).forEach(
+              (itemId, itemData) {
+                loadedItems.add(
+                  CartItem.fromIdAndDataEncodableMap(itemId, itemData),
+                );
+              },
+            );
 
-          loadedOrders.add(
-            Order.fromIdItemsAndDataEncodableMap(
-              orderId,
-              loadedItems,
-              orderData,
-            ),
-          );
-        },
-      );
+            loadedOrders.add(
+              Order.fromIdItemsAndDataEncodableMap(
+                orderId,
+                loadedItems,
+                orderData,
+              ),
+            );
+          },
+        );
+      }
 
       _list = loadedOrders;
       notifyListeners();

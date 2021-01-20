@@ -5,11 +5,10 @@ import '../utils/price.dart';
 import 'cart_item.dart';
 
 class Cart with ChangeNotifier {
-  final Map<String, CartItem> _items = {};
-  final Products productsProvider;
-
   Cart(this.productsProvider);
 
+  final Products productsProvider;
+  final Map<String, CartItem> _items = {};
   Map<String, CartItem> get items => {..._items};
   int get itemsQuantity => _items.length;
 
@@ -33,7 +32,7 @@ class Cart with ChangeNotifier {
         return CartItem(
           id: DateTime.now().toString(),
           title: product.title,
-          price: product.price,
+          unitPrice: product.price,
           quantity: 0,
         );
       },

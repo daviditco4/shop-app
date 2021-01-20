@@ -25,20 +25,14 @@ class Product with ChangeNotifier {
   });
 
   Product.fromMap(Map<String, Object> map)
-      : assert(map.containsKey(idKey) &&
-            (map[idKey].runtimeType == String ||
-                map[idKey].runtimeType == Null)),
-        assert(map.containsKey(tleKey) && map[tleKey].runtimeType == String),
-        assert(map.containsKey(dscKey) && map[dscKey].runtimeType == String),
-        assert(map.containsKey(prcKey) && map[prcKey].runtimeType == Price),
-        assert(map.containsKey(imgKey) && map[imgKey].runtimeType == String),
-        assert(map.containsKey(wshKey) && map[wshKey].runtimeType == bool),
-        id = map[idKey],
-        title = map[tleKey],
-        description = map[dscKey],
-        price = map[prcKey],
-        imageUrl = map[imgKey],
-        isWished = map[wshKey];
+      : this(
+          id: map[idKey],
+          title: map[tleKey],
+          description: map[dscKey],
+          price: map[prcKey],
+          imageUrl: map[imgKey],
+          isWished: map[wshKey],
+        );
 
   Product.fromHtmlResponse(String id, Map<String, Object> map)
       : this(

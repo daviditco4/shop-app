@@ -6,17 +6,16 @@ class CartItem with ChangeNotifier {
   CartItem({
     @required this.id,
     @required this.title,
+    @required this.unitPrice,
     @required this.quantity,
-    @required this.price,
   });
 
   final String id;
   final String title;
-  final Price price;
+  final Price unitPrice;
   int quantity;
-
-  Price get totalPrice => price * quantity;
-  String get details => '$quantity x \$$price';
+  Price get totalPrice => unitPrice * quantity;
+  String get details => '\$$unitPrice x $quantity';
   void addOneMore() => quantity++;
   void removeOne() => quantity--;
 }

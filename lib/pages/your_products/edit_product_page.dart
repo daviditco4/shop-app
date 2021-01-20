@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/error_dialog.dart';
 
 import '../../models/products/product.dart';
 import '../../models/products/products.dart';
@@ -41,7 +42,6 @@ class _EditProductPageState extends State<EditProductPage> {
 
       final products = Provider.of<Products>(context, listen: false);
       final newProduct = Product.fromMap(_formInput);
-
       setState(() => _isLoading = true);
 
       try {
@@ -51,21 +51,7 @@ class _EditProductPageState extends State<EditProductPage> {
           await products.replace(newProduct);
         }
       } catch (e) {
-        await showDialog<Null>(
-          context: context,
-          builder: (ctx) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Something went wrong.'),
-              actions: [
-                FlatButton(
-                  onPressed: Navigator.of(ctx).pop,
-                  child: const Text('CLOSE'),
-                ),
-              ],
-            );
-          },
-        );
+        await showDialog<Null>(context: context, builder: buildErrorDialog);
       } finally {
         Navigator.of(context).pop();
       }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BinaryDialogAction extends StatelessWidget {
-  const BinaryDialogAction(this.confirm);
+  const BinaryDialogAction(this.confirmation);
 
-  final bool confirm;
+  final bool confirmation;
 
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () => Navigator.of(context).pop(confirm),
-      child: Text(confirm ? 'YES' : 'NO'),
+      onPressed: () => Navigator.of(context).pop(confirmation),
+      child: Text(confirmation ? 'YES' : 'NO'),
     );
   }
 }

@@ -18,4 +18,21 @@ class CartItem with ChangeNotifier {
   String get details => '\$$unitPrice x $quantity';
   void addOneMore() => quantity++;
   void removeOne() => quantity--;
+
+  Map<String, Object> toEncodableMapWithoutId() {
+    return {
+      'title': title,
+      'unitPrice': unitPrice.amount,
+      'quantity': quantity,
+    };
+  }
+
+  CartItem copyWithId(String newId) {
+    return CartItem(
+      id: newId,
+      title: title,
+      unitPrice: unitPrice,
+      quantity: quantity,
+    );
+  }
 }

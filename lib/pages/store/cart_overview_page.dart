@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/error_dialog.dart';
 
 import '../../models/cart/cart.dart';
 import '../../models/orders/orders.dart';
 import '../../widgets/items/cart_item.dart';
+import '../orders/orders_overview_page.dart';
 
-class CartOverviewPage extends StatelessWidget {
+class CartOverviewPage extends StatefulWidget {
   static const routeName = '/cart-overview';
+
+  @override
+  _CartOverviewPageState createState() => _CartOverviewPageState();
+}
+
+class _CartOverviewPageState extends State<CartOverviewPage> {
+  var _isLoading = false;
+
+  Future<void> placeOrder() async {
+    final cart = Provider.of<Cart>(context, listen: false);
+    final navigator = Navigator.of(context);
+    setState(() => _isLoading = true);
+
+    try {
+      await Provider.of<Orders>(context, listen: false).add(cart);
+      navigator.pop();
+      navigator.pushReplacementNamed(OrdersOverviewPage.routeName);
+    } catch (e) {
+      await showDialog<Null>(context: context, builder: buildErrorDialog);
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,57 +43,58 @@ class CartOverviewPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Your Cart')),
-      body: Column(
-        children: [
-          Card(
-            margin: padding15,
-            child: Padding(
-              padding: padding15,
-              child: Row(
-                children: [
-                  Text('Total', style: theme.textTheme.headline6),
-                  const Spacer(),
-                  Chip(
-                    backgroundColor: theme.primaryColorDark,
-                    label: Text(
-                      '\$${cart.totalPrice}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Card(
+                  margin: padding15,
+                  child: Padding(
+                    padding: padding15,
+                    child: Row(
+                      children: [
+                        Text('Total', style: theme.textTheme.headline6),
+                        const Spacer(),
+                        Chip(
+                          backgroundColor: theme.primaryColorDark,
+                          label: Text(
+                            '\$${cart.totalPrice}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: sizedBoxWidth),
+                        FlatButton(
+                          onPressed:
+                              cart.itemsQuantity == 0 ? null : placeOrder,
+                          padding: const EdgeInsets.all(sizedBoxWidth),
+                          textColor: theme.primaryColor,
+                          child: const Text(
+                            'ORDER NOW',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: sizedBoxWidth),
-                  FlatButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).add(cart);
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cart.itemsQuantity,
+                    itemBuilder: (_, index) {
+                      final productId = cartItemsKeys.elementAt(index);
+                      final cartItem = cartItems[productId];
+                      return ChangeNotifierProvider.value(
+                        value: cartItem,
+                        child: CartItem(productId),
+                      );
                     },
-                    padding: const EdgeInsets.all(sizedBoxWidth),
-                    textColor: theme.primaryColor,
-                    child: const Text(
-                      'ORDER NOW',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.itemsQuantity,
-              itemBuilder: (_, index) {
-                final productId = cartItemsKeys.elementAt(index);
-                final cartItem = cartItems[productId];
-                return ChangeNotifierProvider.value(
-                  value: cartItem,
-                  child: CartItem(productId),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

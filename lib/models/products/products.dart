@@ -28,10 +28,7 @@ class Products with ChangeNotifier {
 
       valuesMap.forEach(
         (productId, productData) {
-          loadedValues.insert(
-            0,
-            Product.fromHtmlResponse(productId, productData),
-          );
+          loadedValues.add(Product.fromHtmlResponse(productId, productData));
         },
       );
 

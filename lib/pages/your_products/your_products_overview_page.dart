@@ -31,7 +31,7 @@ class YourProductsOverviewPage extends StatelessWidget {
             itemCount: products.length,
             itemBuilder: (_, index) {
               return ChangeNotifierProvider.value(
-                value: products[products.length - index - 1],
+                value: products[index],
                 child: YourProductItem(),
               );
             },

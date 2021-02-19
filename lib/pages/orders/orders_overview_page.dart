@@ -13,39 +13,45 @@ class OrdersOverviewPage extends StatefulWidget {
 }
 
 class _OrdersOverviewPageState extends State<OrdersOverviewPage> {
-  var _isLoading = true;
+  Future<void> _refreshFuture;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<Orders>(
-      context,
-      listen: false,
-    ).pull().then((_) => setState(() => _isLoading = false));
+    _refreshFuture = Provider.of<Orders>(context, listen: false).pull();
   }
 
   @override
   Widget build(BuildContext context) {
-    final orders = Provider.of<Orders>(context);
-    final ordersList = orders.list;
-
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(title: const Text('Your Orders')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: orders.pull,
-              child: ListView.builder(
-                itemCount: ordersList.length,
-                itemBuilder: (_, index) {
-                  return ChangeNotifierProvider.value(
-                    value: ordersList[index],
-                    child: OrderItem(),
-                  );
-                },
-              ),
-            ),
+      body: FutureBuilder(
+        future: _refreshFuture,
+        builder: (_, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? const Center(child: CircularProgressIndicator())
+              : snapshot.hasError
+                  ? const Center(child: Text('An error has ocurred.'))
+                  : Consumer<Orders>(
+                      builder: (_, orders, __) {
+                        final ordersList = orders.list;
+                        return RefreshIndicator(
+                          onRefresh: orders.pull,
+                          child: ListView.builder(
+                            itemCount: ordersList.length,
+                            itemBuilder: (_, index) {
+                              return ChangeNotifierProvider.value(
+                                value: ordersList[index],
+                                child: OrderItem(),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+        },
+      ),
     );
   }
 }

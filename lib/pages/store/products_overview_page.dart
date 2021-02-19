@@ -16,16 +16,13 @@ class ProductsOverviewPage extends StatefulWidget {
 }
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
-  var _isLoading = true;
+  Future<void> _refreshFuture;
   var _filtering = Filtering.none;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<Products>(
-      context,
-      listen: false,
-    ).pull().then((_) => setState(() => _isLoading = false));
+    _refreshFuture = Provider.of<Products>(context, listen: false).pull();
   }
 
   @override
@@ -48,7 +45,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
           PopupMenuButton(
             onSelected: (filtering) => setState(() => _filtering = filtering),
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => const [
               PopupMenuItem(
                 value: Filtering.wishedOnly,
@@ -59,12 +56,19 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: Provider.of<Products>(context, listen: false).pull,
-              child: ProductsGrid(_filtering),
-            ),
+      body: FutureBuilder(
+        future: _refreshFuture,
+        builder: (ctx, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? const Center(child: CircularProgressIndicator())
+              : snapshot.hasError
+                  ? const Center(child: Text('An error has ocurred.'))
+                  : RefreshIndicator(
+                      onRefresh: Provider.of<Products>(ctx, listen: false).pull,
+                      child: ProductsGrid(_filtering),
+                    );
+        },
+      ),
     );
   }
 }

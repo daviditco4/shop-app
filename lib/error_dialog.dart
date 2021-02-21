@@ -5,7 +5,7 @@ Widget buildErrorDialog(BuildContext context) {
     title: const Text('Error'),
     content: const Text('Something went wrong.'),
     actions: [
-      FlatButton(
+      TextButton(
         onPressed: Navigator.of(context).pop,
         child: const Text('CLOSE'),
       ),

@@ -7,7 +7,7 @@ class BinaryDialogAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return TextButton(
       onPressed: () => Navigator.of(context).pop(confirmation),
       child: Text(confirmation ? 'YES' : 'NO'),
     );

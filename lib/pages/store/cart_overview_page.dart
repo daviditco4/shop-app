@@ -66,14 +66,20 @@ class _CartOverviewPageState extends State<CartOverviewPage> {
                           ),
                         ),
                         const SizedBox(width: sizedBoxWidth),
-                        FlatButton(
+                        TextButton(
                           onPressed:
                               cart.itemsQuantity == 0 ? null : placeOrder,
-                          padding: const EdgeInsets.all(sizedBoxWidth),
-                          textColor: theme.primaryColor,
-                          child: const Text(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(sizedBoxWidth),
+                            ),
+                          ),
+                          child: Text(
                             'ORDER NOW',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.primaryColor,
+                            ),
                           ),
                         ),
                       ],

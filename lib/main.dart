@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'models/cart/cart.dart';
 import 'models/orders/orders.dart';
 import 'models/products/products.dart';
+import 'pages/auth/auth_page.dart';
 import 'pages/orders/orders_overview_page.dart';
 import 'pages/store/cart_overview_page.dart';
 import 'pages/store/product_details_page.dart';
@@ -35,10 +36,17 @@ class MyApp extends StatelessWidget {
             primaryColorBrightness: Brightness.light,
             accentColor: Colors.purple.shade200,
             fontFamily: 'Lato',
+            primaryTextTheme: const TextTheme(
+              headline3: TextStyle(
+                fontSize: 50.0,
+                fontFamily: 'Anton',
+                color: Colors.white,
+              ),
+            ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
+          home: AuthPage(),
           routes: {
-            '/': (_) => ProductsOverviewPage(),
             ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
             CartOverviewPage.routeName: (_) => CartOverviewPage(),
             OrdersOverviewPage.routeName: (_) => OrdersOverviewPage(),

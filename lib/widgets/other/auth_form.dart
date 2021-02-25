@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/auth/auth.dart';
 
 enum AuthMode { signup, signin }
 
@@ -14,14 +17,16 @@ class _AuthFormState extends State<AuthForm> {
   final _authData = {'email': '', 'password': ''};
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState.validate()) {
+      final auth = Provider.of<Auth>(context, listen: false);
+
       _formKey.currentState.save();
       setState(() => _isLoading = true);
 
       switch (_authMode) {
         case AuthMode.signup:
-          // Sign up...
+          await auth.signUp(_authData['email'], _authData['password']);
           break;
         case AuthMode.signin:
           // Sign in...

@@ -29,7 +29,7 @@ class _AuthFormState extends State<AuthForm> {
           await auth.signUp(_authData['email'], _authData['password']);
           break;
         case AuthMode.signin:
-          // Sign in...
+          await auth.signIn(_authData['email'], _authData['password']);
           break;
       }
 

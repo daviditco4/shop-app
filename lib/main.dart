@@ -20,44 +20,51 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Products()),
-        ChangeNotifierProvider(create: (_) => Orders()),
         ChangeNotifierProvider(create: (_) => Auth()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => Products(),
+          update: (_, auth, previous) => previous..updateAuthToken(auth.token),
+        ),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (_) => Orders(),
+          update: (_, auth, previous) => previous..updateAuthToken(auth.token),
+        ),
       ],
-      child: Consumer<Products>(
-        builder: (_, products, child) {
+      child: Consumer<Auth>(
+        builder: (_, auth, __) {
           return ChangeNotifierProvider(
-            create: (_) => Cart(products),
-            child: child,
+            create: (ctx) {
+              return Cart(Provider.of<Products>(ctx, listen: false).findById);
+            },
+            child: MaterialApp(
+              title: 'Shop App',
+              theme: ThemeData(
+                primarySwatch: Colors.deepOrange,
+                primaryColorBrightness: Brightness.light,
+                accentColor: Colors.purple.shade200,
+                fontFamily: 'Lato',
+                primaryTextTheme: const TextTheme(
+                  headline3: TextStyle(
+                    fontSize: 50.0,
+                    fontFamily: 'Anton',
+                    color: Colors.white,
+                  ),
+                ),
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+              ),
+              home: auth.isSignedIn ? ProductsOverviewPage() : AuthPage(),
+              routes: {
+                ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
+                CartOverviewPage.routeName: (_) => CartOverviewPage(),
+                OrdersOverviewPage.routeName: (_) => OrdersOverviewPage(),
+                YourProductsOverviewPage.routeName: (_) {
+                  return YourProductsOverviewPage();
+                },
+                EditProductPage.routeName: (_) => EditProductPage(),
+              },
+            ),
           );
         },
-        child: MaterialApp(
-          title: 'Shop App',
-          theme: ThemeData(
-            primarySwatch: Colors.deepOrange,
-            primaryColorBrightness: Brightness.light,
-            accentColor: Colors.purple.shade200,
-            fontFamily: 'Lato',
-            primaryTextTheme: const TextTheme(
-              headline3: TextStyle(
-                fontSize: 50.0,
-                fontFamily: 'Anton',
-                color: Colors.white,
-              ),
-            ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: AuthPage(),
-          routes: {
-            ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
-            CartOverviewPage.routeName: (_) => CartOverviewPage(),
-            OrdersOverviewPage.routeName: (_) => OrdersOverviewPage(),
-            YourProductsOverviewPage.routeName: (_) {
-              return YourProductsOverviewPage();
-            },
-            EditProductPage.routeName: (_) => EditProductPage(),
-          },
-        ),
       ),
     );
   }

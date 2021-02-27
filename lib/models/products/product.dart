@@ -51,8 +51,6 @@ class Product with ChangeNotifier {
   final String imageUrl;
   bool isWished;
 
-  String get url => Products.url.replaceFirst('.json', '/$id.json');
-
   Map<String, Object> toEncodableMapWithoutId() {
     return {
       tleKey: title,
@@ -83,8 +81,11 @@ class Product with ChangeNotifier {
     _toggleWishedAndNotifyOnly();
 
     try {
-      final res = await http.patch(url, body: json.encode({wshKey: isWished}));
-      if (res.statusCode >= 400) {
+      final response = await http.patch(
+        Products.productUrl(this),
+        body: json.encode({wshKey: isWished}),
+      );
+      if (response.statusCode >= 400) {
         throw const HtmlException('Could not update the wish list.');
       }
     } catch (e) {

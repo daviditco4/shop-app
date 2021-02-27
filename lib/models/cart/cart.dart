@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import '../products/products.dart';
+import '../products/product.dart';
 import '../utils/price.dart';
 import 'cart_item.dart';
 
 class Cart with ChangeNotifier {
-  Cart(this.productsProvider);
+  Cart(this.findProductById);
 
-  final Products productsProvider;
+  final Product Function(String) findProductById;
   final Map<String, CartItem> _items = {};
   Map<String, CartItem> get items => {..._items};
   int get itemsQuantity => _items.length;
@@ -24,7 +24,7 @@ class Cart with ChangeNotifier {
   }
 
   void addSingleProduct(String productId) {
-    var product = productsProvider.findById(productId);
+    var product = findProductById(productId);
 
     _items.putIfAbsent(
       productId,

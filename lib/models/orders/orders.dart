@@ -8,15 +8,25 @@ import '../cart/cart_item.dart';
 import 'order.dart';
 
 class Orders with ChangeNotifier {
-  static const url =
-      'https://shop-app-a5aa4-default-rtdb.firebaseio.com/orders.json';
+  static String _authToken;
   var _list = <Order>[];
   List<Order> get list => [..._list];
   int get quantity => _list.length;
 
+  static String get _url {
+    return 'https://shop-app-a5aa4-default-rtdb.firebaseio.com/orders.json'
+        '?auth=$_authToken';
+  }
+
+  static String _orderItemsUrl(Order order) {
+    return _url.replaceFirst('.json', '/${order.id}/items.json');
+  }
+
+  void updateAuthToken(String token) => _authToken = token;
+
   Future<void> pull() async {
     try {
-      final response = await http.get(url);
+      final response = await http.get(_url);
       final ordersMap = json.decode(response.body) as Map<String, dynamic>;
       final loadedOrders = <Order>[];
 
@@ -61,7 +71,7 @@ class Orders with ChangeNotifier {
     final orderMap = order.toEncodableMapWithoutIdAndItems();
 
     try {
-      var response = await http.post(url, body: json.encode(orderMap));
+      var response = await http.post(_url, body: json.encode(orderMap));
       order = order.copyWithId(json.decode(response.body)['name']);
 
       final orderItems = <CartItem>[];
@@ -69,7 +79,10 @@ class Orders with ChangeNotifier {
 
       for (var cartItem in cart.items.values) {
         itemMap = cartItem.toEncodableMapWithoutId();
-        response = await http.post(order.itemsUrl, body: json.encode(itemMap));
+        response = await http.post(
+          _orderItemsUrl(order),
+          body: json.encode(itemMap),
+        );
 
         orderItems.add(cartItem.copyWithId(json.decode(response.body)['name']));
       }

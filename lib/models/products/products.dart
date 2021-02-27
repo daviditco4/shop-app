@@ -7,14 +7,24 @@ import '../exceptions/html_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  static const url =
-      'https://shop-app-a5aa4-default-rtdb.firebaseio.com/products.json';
-  List<Product> _values = [];
+  static String _authToken;
+  var _values = <Product>[];
   List<Product> get values => [..._values];
 
   List<Product> get wishedValuesOnly {
     return _values.where((value) => value.isWished).toList();
   }
+
+  static String get _url {
+    return 'https://shop-app-a5aa4-default-rtdb.firebaseio.com/products.json'
+        '?auth=$_authToken';
+  }
+
+  static String productUrl(Product product) {
+    return _url.replaceFirst('.json', '/${product.id}.json');
+  }
+
+  void updateAuthToken(String token) => _authToken = token;
 
   Product findById(String id) {
     return _values.firstWhere((product) => product.id == id);
@@ -22,7 +32,7 @@ class Products with ChangeNotifier {
 
   Future<void> pull() async {
     try {
-      final response = await http.get(url);
+      final response = await http.get(_url);
       final valuesMap = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedVals = [];
 
@@ -45,7 +55,7 @@ class Products with ChangeNotifier {
     final productMap = product.toEncodableMapWithoutId();
 
     try {
-      final response = await http.post(url, body: json.encode(productMap));
+      final response = await http.post(_url, body: json.encode(productMap));
       _values.add(product.copyWithId(json.decode(response.body)['name']));
       notifyListeners();
     } catch (e) {
@@ -58,8 +68,11 @@ class Products with ChangeNotifier {
     final productMap = product.toEncodableMapWithoutId();
 
     try {
-      final res = await http.patch(product.url, body: json.encode(productMap));
-      if (res.statusCode >= 400) {
+      final response = await http.patch(
+        productUrl(product),
+        body: json.encode(productMap),
+      );
+      if (response.statusCode >= 400) {
         throw const HtmlException('Could not edit the product.');
       }
       _values[_values.indexWhere((prod) => prod.id == product.id)] = product;
@@ -76,7 +89,7 @@ class Products with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.delete(product.url);
+      final response = await http.delete(productUrl(product));
       if (response.statusCode >= 400) {
         throw const HtmlException('Could not delete the product.');
       }

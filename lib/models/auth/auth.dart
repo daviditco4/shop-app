@@ -7,10 +7,16 @@ import '../exceptions/html_exception.dart';
 
 class Auth with ChangeNotifier {
   static const _apiKey = 'AIzaSyA1JI1gf8UgDEI5H1Aub03ecvXY5tCmIIo';
-
   String _userUid;
   String _idToken;
   DateTime _tokenExpiresIn;
+  bool get isSignedIn => token != null;
+
+  String get token {
+    return _tokenExpiresIn != null && _tokenExpiresIn.isAfter(DateTime.now())
+        ? _idToken
+        : null;
+  }
 
   Future<void> _authenticate(
     String email,
@@ -28,6 +34,13 @@ class Auth with ChangeNotifier {
     if (responseData['error'] != null) {
       throw HtmlException(responseData['error']['message']);
     }
+
+    _userUid = responseData['localId'];
+    _idToken = responseData['idToken'];
+    _tokenExpiresIn = DateTime.now().add(
+      Duration(seconds: int.parse(responseData['expiresIn'])),
+    );
+    notifyListeners();
   }
 
   Future<void> signUp(String email, String password) async {

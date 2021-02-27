@@ -5,7 +5,6 @@ import 'package:shop_app/error_dialog.dart';
 
 import '../../models/products/product.dart';
 import '../../models/products/products.dart';
-import '../../models/utils/price.dart';
 
 class EditProductPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -17,13 +16,12 @@ class EditProductPage extends StatefulWidget {
 class _EditProductPageState extends State<EditProductPage> {
   var _isLoading = false;
   var _isInitialized = false;
-  var _formInput = {
+  var _formInput = <String, Object>{
     Product.idKey: null,
     Product.tleKey: '',
     Product.dscKey: '',
     Product.prcKey: null,
     Product.imgKey: '',
-    Product.wshKey: false,
   };
   final _initialValues = {Product.prcKey: ''};
   final _formKey = GlobalKey<FormState>();
@@ -41,14 +39,13 @@ class _EditProductPageState extends State<EditProductPage> {
       _formKey.currentState.save();
 
       final products = Provider.of<Products>(context, listen: false);
-      final newProduct = Product.fromMap(_formInput);
       setState(() => _isLoading = true);
 
       try {
-        if (newProduct.id == null) {
-          await products.add(newProduct);
+        if (_formInput[Product.idKey] == null) {
+          await products.add(_formInput);
         } else {
-          await products.replace(newProduct);
+          await products.edit(_formInput);
         }
       } catch (e) {
         await showDialog<Null>(context: context, builder: buildErrorDialog);
@@ -115,9 +112,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 TextButton(
                   onPressed: _saveForm,
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(
-                      Theme.of(context).colorScheme.onPrimary,
-                    ),
+                    foregroundColor: MaterialStateProperty.all(Colors.black),
                   ),
                   child: const Text('SAVE'),
                 ),
@@ -155,7 +150,7 @@ class _EditProductPageState extends State<EditProductPage> {
                         return null;
                       },
                       onSaved: (value) {
-                        _formInput[Product.prcKey] = Price(double.parse(value));
+                        _formInput[Product.prcKey] = double.parse(value);
                       },
                       onFieldSubmitted: (_) {
                         focusScope.requestFocus(_descriptionFocusNode);

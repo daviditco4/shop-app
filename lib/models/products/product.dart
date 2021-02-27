@@ -29,19 +29,21 @@ class Product with ChangeNotifier {
           id: map[idKey],
           title: map[tleKey],
           description: map[dscKey],
-          price: map[prcKey],
+          price: Price(map[prcKey]),
           imageUrl: map[imgKey],
-          isWished: map[wshKey],
         );
 
-  Product.fromIdAndDataEncodableMap(String id, Map<String, Object> dataMap)
-      : this(
+  Product.fromIdAndIsWishedAndDataEncodableMap(
+    String id,
+    bool isWished,
+    Map<String, Object> dataMap,
+  ) : this(
           id: id,
           title: dataMap[tleKey],
           description: dataMap[dscKey],
           price: Price(dataMap[prcKey]),
           imageUrl: dataMap[imgKey],
-          isWished: dataMap[wshKey],
+          isWished: isWished,
         );
 
   final String id;
@@ -51,22 +53,12 @@ class Product with ChangeNotifier {
   final String imageUrl;
   bool isWished;
 
-  Map<String, Object> toEncodableMapWithoutId() {
-    return {
-      tleKey: title,
-      dscKey: description,
-      prcKey: price.amount,
-      imgKey: imageUrl,
-      wshKey: isWished,
-    };
-  }
-
   Map<String, Object> toMap() {
     return {
       idKey: id,
       tleKey: title,
       dscKey: description,
-      prcKey: price,
+      prcKey: price.amount,
       imgKey: imageUrl,
       wshKey: isWished,
     };
@@ -81,9 +73,9 @@ class Product with ChangeNotifier {
     _toggleWishedAndNotifyOnly();
 
     try {
-      final response = await http.patch(
-        Products.productUrl(this),
-        body: json.encode({wshKey: isWished}),
+      final response = await http.put(
+        Products.userWishedProductUrl(this),
+        body: json.encode(isWished),
       );
       if (response.statusCode >= 400) {
         throw const HtmlException('Could not update the wish list.');
@@ -93,16 +85,5 @@ class Product with ChangeNotifier {
       print(e);
       throw e;
     }
-  }
-
-  Product copyWithId(String newId) {
-    return Product(
-      id: newId,
-      title: title,
-      description: description,
-      price: price,
-      imageUrl: imageUrl,
-      isWished: isWished,
-    );
   }
 }

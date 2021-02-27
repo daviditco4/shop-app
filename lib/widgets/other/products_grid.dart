@@ -13,10 +13,10 @@ class ProductsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const padding = 10.0;
-    final productsProvider = Provider.of<Products>(context);
-    final products = filtering == Filtering.wishedOnly
-        ? productsProvider.wishedValuesOnly
-        : productsProvider.values;
+    final products = Provider.of<Products>(context);
+    final values = filtering == Filtering.wishedOnly
+        ? products.wishedValuesOnly
+        : products.values;
 
     return GridView.builder(
       padding: const EdgeInsets.all(padding),
@@ -26,10 +26,10 @@ class ProductsGrid extends StatelessWidget {
         crossAxisSpacing: padding,
         childAspectRatio: 3.0 / 2.0,
       ),
-      itemCount: products.length,
+      itemCount: values.length,
       itemBuilder: (_, index) {
         return ChangeNotifierProvider.value(
-          value: products[products.length - index - 1],
+          value: values[values.length - index - 1],
           child: ProductItem(),
         );
       },

@@ -111,7 +111,17 @@ class _EditProductPageState extends State<EditProductPage> {
         ),
         actions: _isLoading
             ? []
-            : [TextButton(onPressed: _saveForm, child: const Text('SAVE'))],
+            : [
+                TextButton(
+                  onPressed: _saveForm,
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(
+                      Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ),
+                  child: const Text('SAVE'),
+                ),
+              ],
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

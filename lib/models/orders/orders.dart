@@ -9,20 +9,24 @@ import 'order.dart';
 
 class Orders with ChangeNotifier {
   static String _authToken;
+  static String _userId;
   var _list = <Order>[];
   List<Order> get list => [..._list];
   int get quantity => _list.length;
 
   static String get _url {
-    return 'https://shop-app-a5aa4-default-rtdb.firebaseio.com/orders.json'
-        '?auth=$_authToken';
+    return 'https://shop-app-a5aa4-default-rtdb.firebaseio.com/orders'
+        '/$_userId.json?auth=$_authToken';
   }
 
   static String _orderItemsUrl(Order order) {
     return _url.replaceFirst('.json', '/${order.id}/items.json');
   }
 
-  void updateAuthToken(String token) => _authToken = token;
+  void updateAuthData(String token, String userId) {
+    _authToken = token;
+    _userId = userId;
+  }
 
   Future<void> pull() async {
     try {

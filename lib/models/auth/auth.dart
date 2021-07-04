@@ -62,4 +62,11 @@ class Auth with ChangeNotifier {
       throw e;
     }
   }
+
+  void signOut() {
+    _userUid = null;
+    _idToken = null;
+    _tokenExpiresIn = null;
+    notifyListeners();
+  }
 }

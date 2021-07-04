@@ -18,6 +18,10 @@ class Products with ChangeNotifier {
     return _values.where((value) => value.isWished).toList();
   }
 
+  List<Product> get userValues {
+    return _values.where((value) => value.publisherUid == _userId).toList();
+  }
+
   static String get _url => '$_serverUrl/products.json?auth=$_authToken';
 
   static String _productUrl(Product product) {
@@ -72,6 +76,7 @@ class Products with ChangeNotifier {
 
   Future<void> add(Map<String, Object> productMap) async {
     try {
+      productMap['publisherUid'] = _userId;
       final response = await http.post(_url, body: json.encode(productMap));
       productMap[Product.idKey] = json.decode(response.body)['name'];
       _values.add(Product.fromMap(productMap));

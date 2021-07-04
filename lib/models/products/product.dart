@@ -9,6 +9,7 @@ import 'products.dart';
 
 class Product with ChangeNotifier {
   static const idKey = 'id';
+  static const uidKey = 'publisherUid';
   static const tleKey = 'title';
   static const dscKey = 'description';
   static const prcKey = 'price';
@@ -17,6 +18,7 @@ class Product with ChangeNotifier {
 
   Product({
     @required this.id,
+    @required this.publisherUid,
     @required this.title,
     @required this.description,
     @required this.price,
@@ -27,6 +29,7 @@ class Product with ChangeNotifier {
   Product.fromMap(Map<String, Object> map)
       : this(
           id: map[idKey],
+          publisherUid: map[uidKey],
           title: map[tleKey],
           description: map[dscKey],
           price: Price(map[prcKey]),
@@ -39,6 +42,7 @@ class Product with ChangeNotifier {
     Map<String, Object> dataMap,
   ) : this(
           id: id,
+          publisherUid: dataMap[uidKey],
           title: dataMap[tleKey],
           description: dataMap[dscKey],
           price: Price(dataMap[prcKey]),
@@ -47,6 +51,7 @@ class Product with ChangeNotifier {
         );
 
   final String id;
+  final String publisherUid;
   final String title;
   final String description;
   final Price price;
@@ -56,6 +61,7 @@ class Product with ChangeNotifier {
   Map<String, Object> toMap() {
     return {
       idKey: id,
+      uidKey: publisherUid,
       tleKey: title,
       dscKey: description,
       prcKey: price.amount,

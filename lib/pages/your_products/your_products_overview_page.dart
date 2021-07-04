@@ -26,7 +26,7 @@ class YourProductsOverviewPage extends StatelessWidget {
       ),
       body: Consumer<Products>(
         builder: (_, productsProvider, __) {
-          final products = productsProvider.values;
+          final products = productsProvider.userValues;
           return ListView.separated(
             itemCount: products.length,
             itemBuilder: (_, index) {

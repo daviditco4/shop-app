@@ -18,6 +18,7 @@ class _EditProductPageState extends State<EditProductPage> {
   var _isInitialized = false;
   var _formInput = <String, Object>{
     Product.idKey: null,
+    Product.uidKey: null,
     Product.tleKey: '',
     Product.dscKey: '',
     Product.prcKey: null,

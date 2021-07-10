@@ -7,6 +7,7 @@ import 'models/orders/orders.dart';
 import 'models/products/products.dart';
 import 'pages/auth/auth_page.dart';
 import 'pages/orders/orders_overview_page.dart';
+import 'pages/other/splash_page.dart';
 import 'pages/store/cart_overview_page.dart';
 import 'pages/store/product_details_page.dart';
 import 'pages/store/products_overview_page.dart';
@@ -56,7 +57,16 @@ class MyApp extends StatelessWidget {
                 ),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
-              home: auth.isSignedIn ? ProductsOverviewPage() : AuthPage(),
+              home: auth.isSignedIn
+                  ? ProductsOverviewPage()
+                  : FutureBuilder(
+                      future: auth.attemptAutoLogin(),
+                      builder: (_, snapshot) {
+                        return snapshot.connectionState != ConnectionState.done
+                            ? SplashPage()
+                            : AuthPage();
+                      },
+                    ),
               routes: {
                 ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
                 CartOverviewPage.routeName: (_) => CartOverviewPage(),

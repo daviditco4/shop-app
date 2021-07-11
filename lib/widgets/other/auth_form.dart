@@ -64,12 +64,16 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    const animationDuration = Duration(milliseconds: 300);
+    const animationCurve = Curves.easeOut;
     final isSgnin = _authMode == AuthMode.signin;
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       elevation: 8.0,
-      child: Container(
+      child: AnimatedContainer(
+        duration: animationDuration,
+        curve: animationCurve,
         width: MediaQuery.of(context).size.width * 0.75,
         height: isSgnin ? 260 : 320,
         padding: const EdgeInsets.all(16.0),
@@ -100,8 +104,15 @@ class _AuthFormState extends State<AuthForm> {
                   obscureText: true,
                   decoration: const InputDecoration(labelText: 'Password'),
                 ),
-                if (_authMode == AuthMode.signup)
-                  TextFormField(
+                AnimatedCrossFade(
+                  crossFadeState: isSgnin
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  duration: animationDuration,
+                  sizeCurve: animationCurve,
+                  alignment: Alignment.bottomCenter,
+                  firstChild: Container(),
+                  secondChild: TextFormField(
                     validator: (value) {
                       return value != _passwordController.text
                           ? 'Passwords do not match.'
@@ -113,6 +124,7 @@ class _AuthFormState extends State<AuthForm> {
                       labelText: 'Confirm Password',
                     ),
                   ),
+                ),
                 const SizedBox(height: 20.0),
                 if (_isLoading)
                   const CircularProgressIndicator()

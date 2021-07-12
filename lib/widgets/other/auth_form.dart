@@ -114,9 +114,11 @@ class _AuthFormState extends State<AuthForm> {
                   firstChild: Container(),
                   secondChild: TextFormField(
                     validator: (value) {
-                      return value != _passwordController.text
-                          ? 'Passwords do not match.'
-                          : null;
+                      return isSgnin
+                          ? null
+                          : value != _passwordController.text
+                              ? 'Passwords do not match.'
+                              : null;
                     },
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,

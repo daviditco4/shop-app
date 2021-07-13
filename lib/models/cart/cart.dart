@@ -5,10 +5,8 @@ import '../utils/price.dart';
 import 'cart_item.dart';
 
 class Cart with ChangeNotifier {
-  Cart(this.findProductById);
-
-  final Product Function(String) findProductById;
   final Map<String, CartItem> _items = {};
+  List<Product> _products;
   Map<String, CartItem> get items => {..._items};
   int get itemsQuantity => _items.length;
 
@@ -23,8 +21,10 @@ class Cart with ChangeNotifier {
     );
   }
 
+  void updateProducts(List<Product> products) => _products = products;
+
   void addSingleProduct(String productId) {
-    var product = findProductById(productId);
+    var product = _products.firstWhere((product) => product.id == productId);
 
     _items.putIfAbsent(
       productId,

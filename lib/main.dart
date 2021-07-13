@@ -17,6 +17,12 @@ import 'pages/your_products/your_products_overview_page.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  void _setNavigateToAuth(Auth auth, BuildContext context) {
+    auth.navigateToLogin = () {
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (_) => false);
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -34,49 +40,65 @@ class MyApp extends StatelessWidget {
             return previous..updateAuthData(auth.token, auth.userId);
           },
         ),
+        ChangeNotifierProxyProvider<Products, Cart>(
+          create: (_) => Cart(),
+          update: (_, products, prev) => prev..updateProducts(products.values),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (_, auth, __) {
-          return ChangeNotifierProvider(
-            create: (ctx) {
-              return Cart(Provider.of<Products>(ctx, listen: false).findById);
-            },
-            child: MaterialApp(
-              title: 'Shop App',
-              theme: ThemeData(
-                primarySwatch: Colors.deepOrange,
-                primaryColorBrightness: Brightness.light,
-                accentColor: Colors.purple.shade200,
-                fontFamily: 'Lato',
-                primaryTextTheme: const TextTheme(
-                  headline3: TextStyle(
-                    fontSize: 50.0,
-                    fontFamily: 'Anton',
-                    color: Colors.white,
-                  ),
+          return MaterialApp(
+            title: 'Shop App',
+            theme: ThemeData(
+              primarySwatch: Colors.deepOrange,
+              primaryColorBrightness: Brightness.light,
+              accentColor: Colors.purple.shade200,
+              fontFamily: 'Lato',
+              primaryTextTheme: const TextTheme(
+                headline3: TextStyle(
+                  fontSize: 50.0,
+                  fontFamily: 'Anton',
+                  color: Colors.white,
                 ),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
-              home: auth.isSignedIn
-                  ? ProductsOverviewPage()
-                  : FutureBuilder(
-                      future: auth.attemptAutoLogin(),
-                      builder: (_, snapshot) {
-                        return snapshot.connectionState != ConnectionState.done
-                            ? SplashPage()
-                            : AuthPage();
-                      },
-                    ),
-              routes: {
-                ProductDetailsPage.routeName: (_) => ProductDetailsPage(),
-                CartOverviewPage.routeName: (_) => CartOverviewPage(),
-                OrdersOverviewPage.routeName: (_) => OrdersOverviewPage(),
-                YourProductsOverviewPage.routeName: (_) {
-                  return YourProductsOverviewPage();
-                },
-                EditProductPage.routeName: (_) => EditProductPage(),
-              },
+              visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
+            routes: {
+              '/': (ctx) {
+                _setNavigateToAuth(auth, ctx);
+
+                return auth.isSignedIn
+                    ? ProductsOverviewPage()
+                    : FutureBuilder(
+                        future: auth.attemptAutoLogin(),
+                        builder: (_, snap) {
+                          return snap.connectionState != ConnectionState.done
+                              ? SplashPage()
+                              : AuthPage();
+                        },
+                      );
+              },
+              ProductDetailsPage.routeName: (ctx) {
+                _setNavigateToAuth(auth, ctx);
+                return ProductDetailsPage();
+              },
+              CartOverviewPage.routeName: (ctx) {
+                _setNavigateToAuth(auth, ctx);
+                return CartOverviewPage();
+              },
+              OrdersOverviewPage.routeName: (ctx) {
+                _setNavigateToAuth(auth, ctx);
+                return OrdersOverviewPage();
+              },
+              YourProductsOverviewPage.routeName: (ctx) {
+                _setNavigateToAuth(auth, ctx);
+                return YourProductsOverviewPage();
+              },
+              EditProductPage.routeName: (ctx) {
+                _setNavigateToAuth(auth, ctx);
+                return EditProductPage();
+              },
+            },
           );
         },
       ),

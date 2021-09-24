@@ -17,7 +17,7 @@ class Auth with ChangeNotifier {
   String _idToken;
   DateTime _tokenExpiry;
   Timer _signoutTimer;
-  void Function() _navigateToLogin;
+  void Function() _navigateToSignin;
   bool get isSignedIn => token != null;
 
   String get token {
@@ -26,7 +26,8 @@ class Auth with ChangeNotifier {
   }
 
   String get userId => _userUid;
-  set navigateToLogin(void Function() navigate) => _navigateToLogin = navigate;
+  set navigateToSignin(void Function() navigate) =>
+      _navigateToSignin = navigate;
 
   Future<void> _authenticate(
     String email,
@@ -77,11 +78,11 @@ class Auth with ChangeNotifier {
     _signoutTimer?.cancel();
     _signoutTimer = null;
     notifyListeners();
-    _navigateToLogin();
+    _navigateToSignin();
     SharedPreferences.getInstance().then((prefs) => prefs.clear());
   }
 
-  Future<void> attemptAutoLogin() async {
+  Future<void> attemptAutoSignin() async {
     final prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey(_dataKey)) {

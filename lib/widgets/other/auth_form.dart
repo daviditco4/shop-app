@@ -133,7 +133,7 @@ class _AuthFormState extends State<AuthForm> {
                 else ...[
                   ElevatedButton(
                     onPressed: _submit,
-                    child: Text(isSgnin ? 'Sign in' : 'Sign up'),
+                    child: Text(isSgnin ? 'Sign In' : 'Sign Up'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -141,7 +141,7 @@ class _AuthFormState extends State<AuthForm> {
                         _authMode = isSgnin ? AuthMode.signup : AuthMode.signin;
                       });
                     },
-                    child: Text('${isSgnin ? 'Sign up' : 'Sign in'} instead'),
+                    child: Text('${isSgnin ? 'Sign Up' : 'Sign In'} Instead'),
                   ),
                 ],
               ],

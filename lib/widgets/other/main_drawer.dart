@@ -42,7 +42,7 @@ class MainDrawer extends StatelessWidget {
               Provider.of<Auth>(context, listen: false).signOut();
             },
             leading: Icon(Icons.logout, color: theme.errorColor),
-            title: Text('Log Out', style: TextStyle(color: theme.errorColor)),
+            title: Text('Sign Out', style: TextStyle(color: theme.errorColor)),
           ),
         ],
       ),

@@ -103,7 +103,7 @@ GitHub repository home page), then begin the installation by opening the file.
 16. Tap "ORDER NOW".
 17. Immediately after, you are taken to the "Orders" screen, where you can view all your orders and tap them for more details.
 18. Once you finish using the app, open the drawer and tap "Sign Out".
-19. For signing in again, enter your email and password, then tap "Sign In".
+19. To sign in again, enter your email and password, then tap "Sign In".
 
 Screenshots:
 
